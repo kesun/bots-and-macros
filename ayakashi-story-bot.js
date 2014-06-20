@@ -6,6 +6,8 @@ function click() {
     console.log(current + "/" + max);
         if ($("#card-acquisition-page").hasClass("ui-page-active")) {
             window.history.back();
+        } else if ($("#treasure-acquisition-page").hasClass("ui-page-active")) {
+            window.history.back();
         } else if ($("#level-up-page").hasClass("ui-page-active")) {
             $(".button")[2].id = "continue";
             $("#continue").trigger("click");
