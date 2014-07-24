@@ -5,6 +5,9 @@ function click() {
     var delay = 1000;
         if ($("#card-acquisition-page").hasClass("ui-page-active")) {
             window.history.back();
+        } else if ($("#pvp-event-encounter-page").hasClass("ui-page-active")) {
+            delay = 2000;
+            location.href = "http://zc2.ayakashi.zynga.com/app.php?_c=adventure&action=currentStage";
         } else if ($("#parts-complete-page").hasClass("ui-page-active")) {
             window.history.back();
         } else if ($("#npc-battle-confirm-page").hasClass("ui-page-active")) {
