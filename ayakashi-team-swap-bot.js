@@ -10,7 +10,7 @@ function clearOrig(){
 	}else{
 		console.log(counter);
 	    if(!$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading') && newWindow.document.readyState == 'complete'){
-    		$(newWindow.$('.down-priority')[1]).trigger('click');
+    		$(newWindow.$('.down-priority')[0]).trigger('click');
 	    	counter++;
 	    	if(counter < 4){
 	    		setTimeout(clearOrig, 1000);
