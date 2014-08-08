@@ -73,12 +73,3 @@ function start(){
 }
 
 start();
-
-    setTimeout(init, delay);
-}
-
-function start(){
-    setTimeout(init, 2000);
-}
-
-start();
