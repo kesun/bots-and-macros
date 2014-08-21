@@ -3,7 +3,6 @@ var max = 30;
 var continueClick = true;
 var curURL = document.URL;
 var newWindow = window.open(curURL, "_blank", "width=400, height=500");
-var newWindow = window.open(curURL, "_blank", "width=350, height=500");
 var delay = 1000;
 
 function init() {
