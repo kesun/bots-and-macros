@@ -6,7 +6,7 @@ function crawl(playerList){
 		var i = 0;
 		for(i = 0; i < playerList.length; i++){
 			var def = $($(playerList[i]).find('dl').children()[3]).text();
-			if(def <= 200){
+			if(def <= 300){
 				openBattle(i);
 				break;
 			}
@@ -29,15 +29,16 @@ function openBattle(index){
 function fight(state){
 	console.log('fight');
 	if(state == 0){
-		console.log(newWindow.document.readyState);
-		console.log(!$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading'));
 		if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')){
-			setTimeout(function(){
+			console.log(newWindow.document.getElementsByTagName('body')[0].childElementCount);
+			if(newWindow.document.getElementsByTagName('body')[0].childElementCount > 0){
 				var addr = newWindow.$('#battle-button-panel').find('a').attr('href');
 				console.log('FIGHT: ', addr);
 				//newWindow.open(addr);
 				setTimeout(function(){fight(1)}, 2000);
-			}, 3000);
+			}else{
+				setTimeout(function(){fight(0)}, 1000);
+			}
 		}else{
 			setTimeout(function(){fight(0)}, 1000);
 		}
