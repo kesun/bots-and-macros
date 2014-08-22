@@ -30,11 +30,10 @@ function fight(state){
 	console.log('fight');
 	if(state == 0){
 		if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')){
-			console.log(newWindow.document.getElementsByTagName('body')[0].childElementCount);
 			if(newWindow.document.getElementsByTagName('body')[0].childElementCount > 0){
 				var addr = newWindow.$('#battle-button-panel').find('a').attr('href');
 				console.log('FIGHT: ', addr);
-				//newWindow.open(addr);
+				newWindow.open(addr);
 				setTimeout(function(){fight(1)}, 2000);
 			}else{
 				setTimeout(function(){fight(0)}, 1000);
