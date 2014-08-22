@@ -6,7 +6,7 @@ function crawl(playerList){
 		var i = 0;
 		for(i = 0; i < playerList.length; i++){
 			var def = $($(playerList[i]).find('dl').children()[3]).text();
-			if(def <= 300){
+			if(def <= 30){
 				openBattle(i);
 				break;
 			}
