@@ -17,7 +17,7 @@ function crawl(playerList){
 
 function openBattle(index){
 	console.log('openBattle');
-	var addr = "http://zc2.ayakashi.zynga.com/" + $($('#opponents-list').find('li')[index]).find('a').attr('href');
+	var addr = "http://zc2.ayakashi.zynga.com" + $($('#opponents-list').find('li')[index]).find('a').attr('href');
 	newWindow = window.open(addr, "_blank", "width=400, height=500");
 	fight(0);
 }
