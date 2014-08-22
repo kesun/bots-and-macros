@@ -1,4 +1,6 @@
 var newWindow;
+var wins = 0;
+var desiredWins = 2; // EDIT THIS ACCORDING TO NEEDS
 
 function crawl(playerList){
 	console.log('crawl');
@@ -31,21 +33,47 @@ function fight(state){
 	if(state == 0){
 		if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')){
 			if(newWindow.document.getElementsByTagName('body')[0].childElementCount > 0){
-				var addr = newWindow.$('#battle-button-panel').find('a').attr('href');
-				console.log('FIGHT: ', addr);
-				newWindow.open(addr);
-				setTimeout(function(){fight(1)}, 2000);
+				if(newWindow.$("#parts-pvp-battle-no-item").hasClass('ui-active')){
+					newWindow.close();
+					newWindow = undefined;
+					setTimeout(init, 300);
+				}else{
+					var addr = newWindow.$('#battle-button-panel').find('a').attr('href');
+					console.log('FIGHT: ', addr);
+					var battleWindow = window.open(addr, "_blank", "width=500, height=500");
+					checkFight(battleWindow, 0);
+					setTimeout(function(){fight(1)}, 1000);
+				}
 			}else{
 				setTimeout(function(){fight(0)}, 1000);
 			}
 		}else{
 			setTimeout(function(){fight(0)}, 1000);
 		}
-	}else{
+	}else{ // done
 		newWindow.close();
 		newWindow = undefined;
-		setTimeout(init, 500);
 	}
+}
+
+function checkFight(battleWindow, state){
+	if(state == 0){
+		if(battleWindow.document.getElementsByTagName('body')[0].childElementCount > 0){
+			if(battleWindow.$("#parts-pvp-battle-no-item").hasClass('ui-active')){
+				checkFight(battleWindow, 1);
+			}else{
+				wins++;
+				checkFight(battleWindow, 1);
+			}
+		}else{
+			setTimeout(checkFight(battleWindow), 500);
+		}
+	}else{ // done
+		battleWindow.close();
+		battleWindow = undefined;
+		setTimeout(init, 300);
+	}
+	
 }
 
 function getPlayerList(){
@@ -58,13 +86,18 @@ function getPlayerList(){
 }
 
 function init() {
-    console.log('init: ', document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading'));
-    if(document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading')){
-        $('#update-battle-list').click();
-        setTimeout(getPlayerList, 500);
-    }else{
-    	setTimeout(init, 1000);
-    }
+	if(wins < desiredWins){
+		console.log('init: ', document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading'));
+	    if(document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading')){
+	        $('#update-battle-list').click();
+	        setTimeout(getPlayerList, 500);
+	    }else{
+	    	setTimeout(init, 1000);
+	    }
+	}else{
+		console.log("SUMMARY: " + wins + " stones in the bag.");
+	}
+    
 }
 
 init();
