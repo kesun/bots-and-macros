@@ -33,7 +33,7 @@ function fight(state){
 	if(state == 0){
 		if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')){
 			if(newWindow.document.getElementsByTagName('body')[0].childElementCount > 0){
-				if(newWindow.$("#parts-pvp-battle-no-item").hasClass('ui-active')){
+				if(newWindow.$("#parts-pvp-battle-no-item").hasClass('ui-page-active')){
 					newWindow.close();
 					newWindow = undefined;
 					setTimeout(init, 300);
@@ -59,7 +59,7 @@ function fight(state){
 function checkFight(battleWindow, state){
 	if(state == 0){
 		if(battleWindow.document.getElementsByTagName('body')[0].childElementCount > 0){
-			if(battleWindow.$("#parts-pvp-battle-no-item").hasClass('ui-active')){
+			if(battleWindow.$("#parts-pvp-battle-no-item").hasClass('ui-page-active')){
 				checkFight(battleWindow, 1);
 			}else{
 				wins++;
