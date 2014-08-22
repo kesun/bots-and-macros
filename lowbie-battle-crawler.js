@@ -3,13 +3,17 @@ var newWindow;
 function crawl(playerList){
 	console.log('crawl');
 	if(document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading')){
-		for(var i = 0; i < playerList.length; i++){
-			var def = $(playerList[i]).children()[3];
-			if(def <= 30){
+		var i = 0;
+		for(i = 0; i < playerList.length; i++){
+			var def = $($(playerList[i]).find('dl').children()[3]).text();
+			if(def <= 200){
 				openBattle(i);
+				break;
 			}
 		}
-		setTimeout(init, 100);
+		if(i == playerList.length){
+			setTimeout(init, 100);
+		}
 	}else{
 		setTimeout(function(){crawl(playerList)}, 1000);
 	}
@@ -25,12 +29,15 @@ function openBattle(index){
 function fight(state){
 	console.log('fight');
 	if(state == 0){
-		if(newWindow.document.readyState == 'complete'){
-			var addr = newWindow.$('#battle-button-panel').find('a').attr('href');
-			console.log('FIGHT: ', addr);
-			alert('I FOUND ONE MOFO!');
-			//newWindow.open(addr);
-			setTimeout(function(){fight(1)}, 2000);
+		console.log(newWindow.document.readyState);
+		console.log(!$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading'));
+		if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')){
+			setTimeout(function(){
+				var addr = newWindow.$('#battle-button-panel').find('a').attr('href');
+				console.log('FIGHT: ', addr);
+				//newWindow.open(addr);
+				setTimeout(function(){fight(1)}, 2000);
+			}, 3000);
 		}else{
 			setTimeout(function(){fight(0)}, 1000);
 		}
@@ -51,7 +58,7 @@ function getPlayerList(){
 }
 
 function init() {
-    console.log('init');
+    console.log('init: ', document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading'));
     if(document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading')){
         $('#update-battle-list').click();
         setTimeout(getPlayerList, 500);
