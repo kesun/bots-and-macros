@@ -1,14 +1,14 @@
 var newWindow;
 var wins = 0;
+var maxDS = 30; // EDIT THIS ACCORDING TO NEEDS
 var desiredWins = 2; // EDIT THIS ACCORDING TO NEEDS
 
 function crawl(playerList){
-	console.log('crawl');
 	if(document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading')){
 		var i = 0;
 		for(i = 0; i < playerList.length; i++){
 			var def = $($(playerList[i]).find('dl').children()[3]).text();
-			if(def <= 30){
+			if(def <= maxDS){
 				openBattle(i);
 				break;
 			}
@@ -38,7 +38,7 @@ function fight(state){
 					console.log('FIGHT: ', addr);
 					var battleWindow = window.open(addr, "_blank", "width=500, height=500");
 					checkFight(battleWindow, 0);
-					setTimeout(function(){fight(1)}, 1000);
+					setTimeout(function(){fight(1)}, 500);
 				}else{
 					newWindow.close();
 					newWindow = undefined;
@@ -58,15 +58,24 @@ function fight(state){
 
 function checkFight(battleWindow, state){
 	if(state == 0){
-		if(battleWindow.document.getElementsByTagName('body')[0].childElementCount > 0){
-			if(battleWindow.$("#parts-pvp-battle-no-item").hasClass('ui-page-active')){
-				checkFight(battleWindow, 1);
-			}else{
+		console.log(battleWindow.document);
+		battleWindow.document;
+		if(battleWindow.document.readyState == 'complete' && battleWindow.document.getElementsByTagName('body')[0].innerHTML != ""){
+			if(battleWindow.$('#empty-energy-page').length > 0){
+				// deal with empty energy
+				console.log('empty energy');
+			}else if(battleWindow.$("#battle-page").length > 0){
+				// BATTLEZ!
+				console.log('WIN!');
 				wins++;
-				checkFight(battleWindow, 1);
+				setTimeout(function(){checkFight(battleWindow, 1)}, 100);
+			}else if(battleWindow.$("#parts-pvp-battle-no-item").length > 0){
+				// stone is already gone
+				console.log('stone is gone...');
+				setTimeout(function(){checkFight(battleWindow, 1)}, 100);
 			}
 		}else{
-			setTimeout(checkFight(battleWindow, 0), 500);
+			setTimeout(function(){checkFight(battleWindow, 0)}, 500);
 		}
 	}else{ // done
 		battleWindow.close();
@@ -87,7 +96,6 @@ function getPlayerList(){
 
 function init() {
 	if(wins < desiredWins){
-		console.log('init: ', document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading'));
 	    if(document.readyState == 'complete' && !$(document.getElementsByTagName('html')).hasClass('ui-loading')){
 	        $('#update-battle-list').click();
 	        setTimeout(getPlayerList, 500);
