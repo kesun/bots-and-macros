@@ -2,6 +2,8 @@ var newWindow;
 var maxDS = 30; // EDIT THIS ACCORDING TO NEEDS
 var eventID = 63 // EDIT THIS ACCORDING TO NEEDS
 var staticMaga = "http://zc2.ayakashi.zynga.com/app.php?_c=parts&action=list";
+var staticMagaID = 68; // EDIT THIS ACCORDING TO NEEDS (66 = kaguya, 68 = hare)
+var staticGhostIndex = staticMagaID - 64 - 1; // this formula only works for the first half of the ghosts
 var curItem;
 var targetType = 0; // 0 for stock bunny maga, 1 for event maga. EDIT THIS ACCORDING TO NEEDS
 
@@ -10,7 +12,7 @@ function openBattle(item, player){
     var addr;
     var battleWindow;
     if(targetType == 0){
-        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + item + "&evid=" + eventID;
+        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=battle&action=exec_battle&target_user_id=" + player + "&target_parts_id=" + item + "&from_battle_tab=&ref=undefined";
     }else{
         addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + item + "&evid=" + eventID;
     }
@@ -69,7 +71,7 @@ function crawl(){
 
 function getMaga(){
     if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
-
+        console.log('Getting a maga!');
     }else{
         setTimeout(getMaga, 1000);
     }
@@ -80,12 +82,12 @@ function openNewWindow(){
     if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
         var stoneList;
         if(targetType == 0){
-            var claim = newWindow.$('.parts-list')[3].getElementsByTagName('button')[0];
+            var claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('button')[0];
             if(!$(claim).hasClass('disabled')){
                 $(claim).click();
                 getMaga();
             }
-            stoneList = newWindow.$('.parts-selector')[3].getElementsByClassName('parts');
+            stoneList = newWindow.$('.parts-selector')[staticGhostIndex].getElementsByClassName('parts');
         }else{
             stoneList = newWindow.$('.parts');
         }
@@ -97,7 +99,7 @@ function openNewWindow(){
         curItem = index + 1;
         var stoneURL;
         if(targetType == 0){
-            stoneURL = "http://zc2.ayakashi.zynga.com/app.php?target_parts_id=68" + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
+            stoneURL = "http://zc2.ayakashi.zynga.com/app.php?target_parts_id=" + staticMagaID + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
         }else{
             stoneURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=battle_list&evid=" + eventID + "&target_item_id=" + curItem;
 
