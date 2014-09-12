@@ -1,20 +1,33 @@
 var newWindow;
-var maxDS = 30; // EDIT THIS ACCORDING TO NEEDS
-var eventID = 63 // EDIT THIS ACCORDING TO NEEDS
 var staticMaga = "http://zc2.ayakashi.zynga.com/app.php?_c=parts&action=list";
-var staticMagaID = 68; // EDIT THIS ACCORDING TO NEEDS (66 = kaguya, 68 = hare)
 var staticGhostIndex = staticMagaID - 64 - 1; // this formula only works for the first half of the ghosts
 var curItem;
-var targetType = 0; // 0 for stock bunny maga, 1 for event maga. EDIT THIS ACCORDING TO NEEDS
+
+// ---------------------- Editable starts ----------------------
+var maxDS = 30; // defence spirit cap of the target
+var targetType = 0; // 0 for stock maga, 1 for event maga
+
+// For event
+var eventID = 63 // event ID
+
+// For static maga
+var staticMagaID = 68; // 66 = kaguya, 68 = hare
+var staticMagaTargetState = 0; // 0 if for auto complete maga set, 1 for repeating on the same stone
+var staticMagaTarget = 5; // 1~6, indicate the target stone colour (only matters if staticMagaTargetState == 1)
+// ---------------------- Editable ends ----------------------
 
 function openBattle(item, player){
     console.log('openBattle');
     var addr;
     var battleWindow;
     if(targetType == 0){
-        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=battle&action=exec_battle&target_user_id=" + player + "&target_parts_id=" + item + "&from_battle_tab=&ref=undefined";
+        if(staticMagaTargetState == 0){
+            addr = "http://zc2.ayakashi.zynga.com/app.php?_c=battle&action=exec_battle&target_user_id=" + player + "&target_parts_id=" + staticMagaID + item + "&from_battle_tab=&ref=undefined";
+        }else{
+            addr = "http://zc2.ayakashi.zynga.com/app.php?_c=battle&action=exec_battle&target_user_id=" + player + "&target_parts_id=" + staticMagaID + staticMagaTarget + "&from_battle_tab=&ref=undefined";
+        }
     }else{
-        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + item + "&evid=" + eventID;
+        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + staticMagaID + item + "&evid=" + eventID;
     }
     battleWindow = window.open(addr, "_blank", "width=400, height=500");
     checkFight(battleWindow, 0);
@@ -72,6 +85,7 @@ function crawl(){
 function getMaga(){
     if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
         console.log('Getting a maga!');
+        setTimeout(init, 1000);
     }else{
         setTimeout(getMaga, 1000);
     }
@@ -82,7 +96,11 @@ function openNewWindow(){
     if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
         var stoneList;
         if(targetType == 0){
-            var claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('button')[0];
+            var claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('input')[3];
+            if(claim == undefined){
+                claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('button')[0];
+            }
+            console.log(newWindow.$('.parts-list')[staticGhostIndex]);
             if(!$(claim).hasClass('disabled')){
                 $(claim).click();
                 getMaga();
@@ -99,7 +117,11 @@ function openNewWindow(){
         curItem = index + 1;
         var stoneURL;
         if(targetType == 0){
-            stoneURL = "http://zc2.ayakashi.zynga.com/app.php?target_parts_id=" + staticMagaID + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
+            if(staticMagaTargetState == 0)
+                stoneURL = "http://zc2.ayakashi.zynga.com/app.php?target_parts_id=" + staticMagaID + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
+            else{
+                stoneURL = "http://zc2.ayakashi.zynga.com/app.php?target_parts_id=" + staticMagaID + staticMagaTarget + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41"
+            }
         }else{
             stoneURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=battle_list&evid=" + eventID + "&target_item_id=" + curItem;
 
