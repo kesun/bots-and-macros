@@ -71,7 +71,7 @@ function crawl(){
             var def = $(player.find('dl').children()[3]).text();
             if(def <= maxDS){
                 var zid = player.find('a').attr('href').split('&')[2].split('=')[1]
-                //openBattle(curItem, zid);
+                openBattle(curItem, zid);
                 break;
             }
         }
