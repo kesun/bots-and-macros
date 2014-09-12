@@ -3,18 +3,20 @@ var staticMaga = "http://zc2.ayakashi.zynga.com/app.php?_c=parts&action=list";
 var staticGhostIndex = staticMagaID - 64 - 1; // this formula only works for the first half of the ghosts
 var curItem;
 
-// ---------------------- Editable starts ----------------------
+// ---------------------- Editable Starts ----------------------
+// -------------------------------------------------------------
 var maxDS = 30; // defence spirit cap of the target
 var targetType = 0; // 0 for stock maga, 1 for event maga
 
-// For event
+// For event (only matters if targetType == 1)
 var eventID = 63 // event ID
 
-// For static maga
+// For static maga (only matters if targetType == 0)
 var staticMagaID = 68; // 66 = kaguya, 68 = hare
 var staticMagaTargetState = 0; // 0 if for auto complete maga set, 1 for repeating on the same stone
 var staticMagaTarget = 5; // 1~6, indicate the target stone colour (only matters if staticMagaTargetState == 1)
-// ---------------------- Editable ends ----------------------
+// -------------------------------------------------------------
+// ----------------------- Editable Ends -----------------------
 
 function openBattle(item, player){
     console.log('openBattle');
