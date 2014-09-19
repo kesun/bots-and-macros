@@ -5,11 +5,11 @@ var curItem;
 
 // ---------------------- Editable Starts ----------------------
 // -------------------------------------------------------------
-var maxDS = 30; // defence spirit cap of the target
-var targetType = 0; // 0 for stock maga, 1 for event maga
+var maxDS = 40; // defence spirit cap of the target
+var targetType = 1; // 0 for stock maga, 1 for event maga
 
 // For event (only matters if targetType == 1)
-var eventID = 63 // event ID
+var eventID = 66 // event ID
 
 // For static maga (only matters if targetType == 0)
 var staticMagaID = 68; // 66 = kaguya, 68 = hare
@@ -29,9 +29,9 @@ function openBattle(item, player){
             addr = "http://zc2.ayakashi.zynga.com/app.php?_c=battle&action=exec_battle&target_user_id=" + player + "&target_parts_id=" + staticMagaID + staticMagaTarget + "&from_battle_tab=&ref=undefined";
         }
     }else{
-        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + staticMagaID + item + "&evid=" + eventID;
+        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + item + "&evid=" + eventID;
     }
-    battleWindow = window.open(addr, "_blank", "width=400, height=500");
+    battleWindow = window.open(addr, "_blank", "width=50, height=50");
     checkFight(battleWindow, 0);
 }
 
@@ -61,8 +61,7 @@ function checkFight(battleWindow, state){
     
 }
 
-function crawl(){
-    console.log('');
+function crawl(counter){
     if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading') && newWindow.$('.defense-kiai').length > 0){
         var playerList = newWindow.$('#opponents-list').find('li');
         var i = 0;
@@ -77,10 +76,16 @@ function crawl(){
         }
         if(i == playerList.length){
             newWindow.$('#update-battle-list').click();
-            setTimeout(crawl, 500);
+            setTimeout(function(){crawl(0)}, 500);
         }
     }else{
-        setTimeout(crawl, 500);
+        var count = 0;
+        if(counter == 10){
+            newWindow.location.reload(true);
+        }else{
+            count = counter + 1;
+        }
+        setTimeout(function(){crawl(count)}, 500);
     }
 }
 
@@ -112,7 +117,7 @@ function openNewWindow(){
             stoneList = newWindow.$('.parts');
         }
         var index = 0;
-        while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != ""){
+        while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != null){
             console.log(stoneList[index].getElementsByTagName('span')[0].getAttribute('style'));
             index++;
         }
@@ -130,7 +135,7 @@ function openNewWindow(){
         }
         newWindow.open(stoneURL, "_self");
         console.log('going to getPlayerList');
-        crawl();
+        crawl(0);
     }else{
         setTimeout(openNewWindow, 1000);
     }
@@ -148,5 +153,5 @@ function init() {
     openNewWindow();
 }
 
-newWindow = window.open("", "_blank", "width=400, height=500");
+newWindow = window.open("", "_blank", "width=100, height=100");
 init();
