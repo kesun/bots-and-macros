@@ -20,7 +20,6 @@ var staticMagaTarget = 5; // 1~6, indicate the target stone colour (only matters
 // ----------------------- Editable Ends -----------------------
 
 function openBattle(item, player){
-    console.log('openBattle');
     var addr;
     var battleWindow;
     if(targetType == 0){
@@ -41,6 +40,8 @@ function checkFight(battleWindow, state){
         if(battleWindow.document.readyState == 'complete' && battleWindow.document.getElementsByTagName('body')[0].innerHTML != ""){
             if(battleWindow.$('#empty-energy-page').length > 0){
                 // deal with empty energy
+                battleWindow.$('.guts-recovery').click();
+                setTimeout(function(){checkFight(battleWindow, 1)}, 1000);
                 console.log('empty energy');
             }else if(battleWindow.$("#battle-page").length > 0){
                 // BATTLEZ!
@@ -100,7 +101,6 @@ function getMaga(){
 }
 
 function openNewWindow(){
-    console.log('openNewWindow');
     if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
         var stoneList;
         if(targetType == 0){
@@ -108,7 +108,6 @@ function openNewWindow(){
             if(claim == undefined){
                 claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('button')[0];
             }
-            console.log(newWindow.$('.parts-list')[staticGhostIndex]);
             if(!$(claim).hasClass('disabled')){
                 $(claim).click();
                 getMaga();
@@ -119,7 +118,6 @@ function openNewWindow(){
         }
         var index = 0;
         while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != null){
-            console.log(stoneList[index].getElementsByTagName('span')[0].getAttribute('style'));
             index++;
         }
         curItem = index + 1;
@@ -135,7 +133,6 @@ function openNewWindow(){
 
         }
         newWindow.open(stoneURL, "_self");
-        console.log('going to getPlayerList');
         crawl(0);
     }else{
         setTimeout(openNewWindow, 1000);
@@ -143,7 +140,6 @@ function openNewWindow(){
 }
 
 function init() {
-    console.log('init');
     if(targetType == 0){
         newWindow.open(staticMaga, "_self");
     }else{
