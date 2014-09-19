@@ -5,6 +5,7 @@ var curItem;
 
 // ---------------------- Editable Starts ----------------------
 // -------------------------------------------------------------
+var reloadTime = 10 // when the game is slow, increase this number as needed. Time in sec = reloadTime / 2.
 var maxDS = 40; // defence spirit cap of the target
 var targetType = 1; // 0 for stock maga, 1 for event maga
 
@@ -80,7 +81,7 @@ function crawl(counter){
         }
     }else{
         var count = 0;
-        if(counter == 10){
+        if(counter == reloadTime){
             newWindow.location.reload(true);
         }else{
             count = counter + 1;
