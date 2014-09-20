@@ -40,7 +40,8 @@ function checkFight(battleWindow, state){
         if(battleWindow.document.readyState == 'complete' && battleWindow.document.getElementsByTagName('body')[0].innerHTML != ""){
             if(battleWindow.$('#empty-energy-page').length > 0){
                 // deal with empty energy
-                battleWindow.$('.guts-recovery').click();
+                var drink = battleWindow.$('.guts-recovery').attr("href");
+                battleWindow.open(drink, "_self");
                 setTimeout(function(){checkFight(battleWindow, 1)}, 1000);
                 console.log('empty energy');
             }else if(battleWindow.$("#battle-page").length > 0){
