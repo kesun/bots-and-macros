@@ -144,7 +144,8 @@ function init() {
     if(targetType == 0){
         newWindow.open(staticMaga, "_self");
     }else{
-        var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=parts_list&evid=" + eventID;
+        // var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=parts_list&evid=" + eventID;
+        var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=entry&evid=" + eventID;
         newWindow.open(summaryURL, "_self");
     }
     console.log('going to openNewWindow');
