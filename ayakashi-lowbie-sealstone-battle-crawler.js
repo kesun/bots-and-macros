@@ -1,6 +1,12 @@
-var newWindow;
-var staticMaga = "http://zc2.ayakashi.zynga.com/app.php?_c=parts&action=list";
+var staticURLBase = "http://zc2.ayakashi.zynga.com/app.php?";
+var staticMaga = staticURLBase + "_c=parts&action=list";
+var staticNormalBattle = staticURLBase + "_c=battle&action=exec_battle";
+var staticEventBattle = staticURLBase + "_c=parts_pvp_event&action=exec_battle";
+var staticEventStone = staticURLBase + "_c=parts_pvp_event&action=battle_list";
+var staticEventEntry = staticURLBase + "_c=parts_pvp_event&action=entry";
 var staticGhostIndex = staticMagaID - 64 - 1; // this formula only works for the first half of the ghosts
+
+var newWindow;
 var curItem;
 
 // ---------------------- Editable Starts ----------------------
@@ -24,12 +30,12 @@ function openBattle(item, player){
     var battleWindow;
     if(targetType == 0){
         if(staticMagaTargetState == 0){
-            addr = "http://zc2.ayakashi.zynga.com/app.php?_c=battle&action=exec_battle&target_user_id=" + player + "&target_parts_id=" + staticMagaID + item + "&from_battle_tab=&ref=undefined";
+            addr = staticNormalBattle + "&target_user_id=" + player + "&target_parts_id=" + staticMagaID + item + "&from_battle_tab=&ref=undefined";
         }else{
-            addr = "http://zc2.ayakashi.zynga.com/app.php?_c=battle&action=exec_battle&target_user_id=" + player + "&target_parts_id=" + staticMagaID + staticMagaTarget + "&from_battle_tab=&ref=undefined";
+            addr = staticNormalBattle + "&target_user_id=" + player + "&target_parts_id=" + staticMagaID + staticMagaTarget + "&from_battle_tab=&ref=undefined";
         }
     }else{
-        addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + item + "&evid=" + eventID;
+        addr = staticEventBattle + "&target_user_id=" + player + "&target_item_id=" + item + "&evid=" + eventID;
     }
     battleWindow = window.open(addr, "_blank", "width=10, height=10");
     checkFight(battleWindow, 0);
@@ -38,7 +44,10 @@ function openBattle(item, player){
 function checkFight(battleWindow, state){
     if(state == 0){
         if(battleWindow.document.readyState == 'complete' && battleWindow.document.getElementsByTagName('body')[0].innerHTML != ""){
-            if(battleWindow.$('#empty-energy-page').length > 0){
+            if(battleWindow.$('.alert').length > 0){
+                // alert page occurs
+                setTimeout(function(){checkFight(battleWindow, 1)}, 500);
+            }else if(battleWindow.$('#empty-energy-page').length > 0){
                 // deal with empty energy
                 var drink = battleWindow.$('.guts-recovery').attr("href");
                 battleWindow.open(drink, "_self");
@@ -131,12 +140,12 @@ function openNewWindow(){
         var stoneURL;
         if(targetType == 0){
             if(staticMagaTargetState == 0)
-                stoneURL = "http://zc2.ayakashi.zynga.com/app.php?target_parts_id=" + staticMagaID + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
+                stoneURL = staticURLBase + "target_parts_id=" + staticMagaID + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
             else{
-                stoneURL = "http://zc2.ayakashi.zynga.com/app.php?target_parts_id=" + staticMagaID + staticMagaTarget + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41"
+                stoneURL = staticURLBase + "target_parts_id=" + staticMagaID + staticMagaTarget + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41"
             }
         }else{
-            stoneURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=battle_list&evid=" + eventID + "&target_item_id=" + curItem;
+            stoneURL = staticEventStone + "&evid=" + eventID + "&target_item_id=" + curItem;
 
         }
         newWindow.open(stoneURL, "_self");
@@ -151,7 +160,7 @@ function init() {
         newWindow.open(staticMaga, "_self");
     }else{
         // var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=parts_list&evid=" + eventID;
-        var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=entry&evid=66";
+        var summaryURL = staticEventEntry + "&evid=66";
         newWindow.open(summaryURL, "_self");
     }
     openNewWindow();
