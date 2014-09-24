@@ -31,7 +31,7 @@ function openBattle(item, player){
     }else{
         addr = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=exec_battle&target_user_id=" + player + "&target_item_id=" + item + "&evid=" + eventID;
     }
-    battleWindow = window.open(addr, "_blank", "width=50, height=50");
+    battleWindow = window.open(addr, "_blank", "width=10, height=10");
     checkFight(battleWindow, 0);
 }
 
@@ -66,21 +66,27 @@ function checkFight(battleWindow, state){
 
 function crawl(counter){
     if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading') && newWindow.$('.defense-kiai').length > 0){
-        var playerList = newWindow.$('#opponents-list').find('li');
-        var i = 0;
-        for(i = 0; i < playerList.length; i++){
-            var player = $(playerList[i]);
-            var def = $(player.find('dl').children()[3]).text();
-            if(def <= maxDS){
-                var zid = player.find('a').attr('href').split('&')[2].split('=')[1]
-                openBattle(curItem, zid);
-                break;
+        var urlSplit = newWindow.location.href.split("&");
+        if(urlSplit.length >= 2 && urlSplit[1] == "action=battle_list"){
+            var playerList = newWindow.$('#opponents-list').find('li');
+            var i = 0;
+            for(i = 0; i < playerList.length; i++){
+                var player = $(playerList[i]);
+                var def = $(player.find('dl').children()[3]).text();
+                if(def <= maxDS){
+                    var zid = player.find('a').attr('href').split('&')[2].split('=')[1]
+                    openBattle(curItem, zid);
+                    break;
+                }
             }
+            if(i == playerList.length){
+                newWindow.$('#update-battle-list').click();
+                setTimeout(function(){crawl(0)}, 500);
+            }
+        }else{
+            setTimeout(init, 1000);
         }
-        if(i == playerList.length){
-            newWindow.$('#update-battle-list').click();
-            setTimeout(function(){crawl(0)}, 500);
-        }
+        
     }else{
         var count = 0;
         if(counter == reloadTime){
@@ -145,11 +151,11 @@ function init() {
         newWindow.open(staticMaga, "_self");
     }else{
         // var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=parts_list&evid=" + eventID;
-        var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=entry&evid=" + eventID;
+        var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=entry&evid=66";
         newWindow.open(summaryURL, "_self");
     }
     openNewWindow();
 }
 
-newWindow = window.open("", "_blank", "width=100, height=100");
+newWindow = window.open("", "_blank", "width=10, height=10");
 init();
