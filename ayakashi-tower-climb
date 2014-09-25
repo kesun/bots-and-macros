@@ -1,0 +1,140 @@
+// Tower Climbing
+
+var teamInfo = {
+	101431: [10472, 10415, 10495, 10416, 10493],
+	101432: [14198, 10492, 3332, 3839, 10046],
+	101433: [16453, 17579, 17198, 10046, 10495],
+	1014232: [17306, 10415, 10495, 10416, 10493]
+};
+
+var battleInfo = {
+	101431: 613050,
+	101432: 613051
+}
+
+var staticAdventure = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_adventure&evid=";
+var staticMonster = "http://zc2.ayakashi.zynga.com/app.php?_c=monster&action=details&inventory_monster_id="
+var staticMonsterList = "http://zc2.ayakashi.zynga.com/app.php?_c=monster&action=list";
+
+var newWindow;
+var floorNum = 0;
+var battleID;
+var dramaID;
+
+var eventID = 67;
+
+var adventureURL = staticAdventure + eventID;
+
+function checkDrama() {
+	dramaID = unescape($(newWindow.$('.button')[0]).attr('href').split('&')[1].split('=')[1]).split('&')[0].split('=')[1]
+}
+
+function wipeTeam(teamWindow, state, members){ // state 0 = init loading; state 1 = wiping; state 2 = close
+	console.log('wipeTeam(state):', state);
+	if(teamWindow.document.readyState == 'complete' &&
+		teamWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
+		!$(teamWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
+
+		if(state == 0){
+			console.log('clicking offence:', $(teamWindow.$('.offense')[0]).parent());
+			$(teamWindow.$('.offense')[0]).click();
+			wipeTeam(teamWindow, 1, members);
+		}else if(state == 1){
+			if(teamWindow.$('.reset-monster').length > 0){
+				console.log('clicking reset:', $(teamWindow.$('.reset-monster')[0]));
+				$(teamWindow.$('.reset-monster')[1]).click();
+				wipeTeam(teamWindow, 2, members);
+			}else{
+				setTimeout(function(){
+					wipeTeam(teamWindow, state, members);
+				}, 1000);
+			}
+			
+		}else if(state == 2){
+			teamWindow.close();
+			updateTeam(members, 1, 0);
+		}
+	}else{
+		setTimeout(function(){
+			wipeTeam(teamWindow, state, members);
+		}, 1000);
+	}
+}
+
+function addMember(memberWindow, members, index){
+	console.log('addMember(index):', index);
+	if(memberWindow.document.readyState == 'complete' &&
+		memberWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
+		!$(memberWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
+
+		switch(index) {
+			case 0:
+				memberWindow.$('.change-leader').click();
+				break;
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+				memberWindow.$('.to-offense').click();
+				break;
+		}
+		setTimeout(function(){
+			memberWindow.close();
+			updateTeam(members, 1, index + 1);
+		}, 1000);
+	}else{
+		setTimeout(function(){
+			addMember(memberWindow, members, index);
+		}, 1000);
+	}
+}
+
+function updateTeam(members, state, index){ // state 0 = wipe team, state 1 = add members, state 2 = done
+	console.log('updateTeam(state):', state);
+	if(state == 0){ // WIPE TEAM
+		var tempWindow = window.open(staticMonsterList, "_blank", "width=10, height=10");
+		wipeTeam(tempWindow, 0, members);
+	}else if(state == 1){ // ADD MEMBERS
+		if(index < 5){
+			var monsterURL = staticMonster + members[index];
+			var tempWindow = window.open(monsterURL, "_blank", "width=10, height=10");
+			addMember(tempWindow, members, index);
+		}else{
+			updateTeam(members, 2, 0);
+		}
+	}else if(state == 2){ // TO BATTLE
+		console.log('TO BATTLE!');
+	}
+}
+
+function climb(){
+	console.log('climb');
+	if(newWindow.document.readyState == 'complete' &&
+		newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
+		!$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
+
+		if(newWindow.$('#card-acquisition-page').hasClass('ui-page-active') ||
+			newWindow.$('#event-point-acquisition-page').hasClass('ui-page-active')){
+			newWindow.history.back();
+			setTimeout(climb, 1000);
+		}else if(newWindow.$('#stage-page').hasClass('ui-page-active')){
+			floorNum = newWindow.$('#stage-name')[0].innerHTML.split("F")[0];
+			newWindow.$('#do-adventure').click();
+			setTimeout(climb, 1000);
+		}else if(newWindow.$('#npc-battle-confirm-page').hasClass('ui-page-active')){
+			battleID = newWindow.location.href.split('&')[0].split('=')[1];
+			console.log('ghost encountered: ', battleID);
+			updateTeam(teamInfo[battleID], 0, 0);
+		}
+	}else{
+		setTimeout(climb, 1000);
+	}
+}
+
+function init() {
+    newWindow.open(adventureURL, "_self");
+    climb();
+}
+
+newWindow = window.open("", "_blank", "width=10, height=10");
+init();
