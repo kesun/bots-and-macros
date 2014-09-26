@@ -13,7 +13,7 @@ var curItem;
 // ---------------------- Editable Starts ----------------------
 // -------------------------------------------------------------
 var reloadTime = 10 // when the game is slow, increase this number as needed. Time in sec = reloadTime / 2.
-var maxDS = 45; // defence spirit cap of the target
+var maxDS = 40; // defence spirit cap of the target
 var targetType = 0; // 0 for stock maga, 1 for event maga
 
 // For event (only matters if targetType == 1)
@@ -109,50 +109,52 @@ function crawl(counter){
 }
 
 function getMaga(){
-    if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
-        console.log('Getting a maga!');
+    if(newWindow.document.readyState == 'complete' && $('#parts-reward-accept-page').hasClass('ui-page-active')){
+        console.log('got a maga!');
         setTimeout(init, 1000);
     }else{
         setTimeout(getMaga, 1000);
     }
 }
 
-function openNewWindow(){
+function openNewWindow(state, stoneList){
     if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
-        var stoneList;
-        if(targetType == 0){
-            var claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('input')[3];
-            if(newWindow.$('.complete-reward')[staticGhostIndex] != undefined &&
-                !$(newWindow.$('.complete-reward')[staticGhostIndex].getElementsByTagName('button')).hasClass('disabled')){
-                $(newWindow.$('.complete-reward')[staticGhostIndex].getElementsByTagName('button')).click();
-                getMaga();
+        if (state == 0){
+            if(targetType == 0){
+                var claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('input')[3];
+                if(newWindow.$('.accept-reward').length > 0){
+                    console.log(newWindow.$('.accept-reward'));
+                    $(newWindow.$('.accept-reward')[0].getElementsByClassName('button')).trigger('click');
+                    getMaga();
+                }else{
+                    openNewWindow(1, newWindow.$('.parts-selector')[staticGhostIndex].getElementsByClassName('parts'));   
+                }
             }else{
-                stoneList = newWindow.$('.parts-selector')[staticGhostIndex].getElementsByClassName('parts');   
+                openNewWindow(1, newWindow.$('.parts'));
             }
         }else{
-            stoneList = newWindow.$('.parts');
-        }
-        var index = 0;
-        //console.log(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') == null);
-        while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != ""){
-            index++;
-        }
-        curItem = index + 1;
-        var stoneURL;
-        if(targetType == 0){
-            if(staticMagaTargetState == 0)
-                stoneURL = staticURLBase + "target_parts_id=" + staticMagaID + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
-            else{
-                stoneURL = staticURLBase + "target_parts_id=" + staticMagaID + staticMagaTarget + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41"
+            var index = 0;
+            //console.log(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') == null);
+            while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != ""){
+                index++;
             }
-        }else{
-            stoneURL = staticEventStone + "&evid=" + eventID + "&target_item_id=" + curItem;
+            curItem = index + 1;
+            var stoneURL;
+            if(targetType == 0){
+                if(staticMagaTargetState == 0)
+                    stoneURL = staticURLBase + "target_parts_id=" + staticMagaID + curItem + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41";
+                else{
+                    stoneURL = staticURLBase + "target_parts_id=" + staticMagaID + staticMagaTarget + "&from_where=stone&_c=battle&action=battle_list&tutorial_step=41"
+                }
+            }else{
+                stoneURL = staticEventStone + "&evid=" + eventID + "&target_item_id=" + curItem;
 
+            }
+            newWindow.open(stoneURL, "_self");
+            crawl(0);
         }
-        newWindow.open(stoneURL, "_self");
-        crawl(0);
     }else{
-        setTimeout(openNewWindow, 1000);
+        setTimeout(function(){openNewWindow(state, stoneList)}, 1000);
     }
 }
 
@@ -164,7 +166,7 @@ function init() {
         var summaryURL = staticEventEntry + "&evid=66";
         newWindow.open(summaryURL, "_self");
     }
-    openNewWindow();
+    openNewWindow(0, null);
 }
 
 newWindow = window.open("", "_blank", "width=10, height=10");
