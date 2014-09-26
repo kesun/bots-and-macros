@@ -11,8 +11,9 @@ var teamInfo = {
 // 613064 = dora
 var battleInfo = {
 	101431: 613050,
-	101432: 613051,
-	101433: 613056
+	101432: 613052, // 53 = win drama
+	101433: 613056,
+	101434: 613054
 };
 
 var staticAdventure = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_adventure&evid=";
@@ -29,22 +30,54 @@ var dramaID;
 
 var adventureURL = staticAdventure + eventID;
 
+function negotiation() {
+	console.log('negotiation');
+	if(newWindow.document.readyState == 'complete' &&
+		newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
+		!$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading') &&
+		newWindow.$('#negotiation-page').length > 0) {
+		console.log(battleID);
+		switch(battleID) {
+			case 101431:
+			case 101432:
+			case 101433:
+			case 101434:
+				newWindow.open($(newWindow.$('.button')[1]).attr('href'), '_self'); /////////////////////////////////////////////////////
+				break;
+		}
+		setTimeout(climb, 2000);
+	}else{
+		setTimeout(negotiation, 1000);
+	}
+}
+
 function checkBattle(state) { // state 0 = during battle, state 1 = after battle, state 2 = win, state 3 = lose
+	console.log('checkBattle');
 	if(newWindow.document.readyState == 'complete' &&
 		newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
 		!$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
 		if(state == 0) {
-			newWindow.$('#battle-scene').trigger('click');
-			setTimeout(function(){checkBattle(1);}, 1000);
+			console.log('state 0');
+			setTimeout(function(){
+				newWindow.$('.layer').trigger('click'); ////////////////////////////////////////////////////
+				setTimeout(function(){checkBattle(1);}, 1000);
+			}, 1000);
+			
 		}else if(state == 1) {
-			if(newWindow.$('#extraquest-event-won-page').hasClass('ui-page-active')){
-				setTimeout(function(){checkBattle(2);}, 1000);
+			console.log('state 1');
+			if(newWindow.$('.results').hasClass('ui-page-active')){
+				if(newWindow.$('#extraquest-event-won-page').hasClass('ui-page-active')){
+					setTimeout(function(){checkBattle(2);}, 1000);
+				}else{
+					setTimeout(function(){checkBattle(3);}, 1000);
+				}
 			}else{
-				setTimeout(function(){checkBattle(3);}, 1000);
+				setTimeout(function(){checkBattle(1);}, 1000);
 			}
 		}else if(state == 2){
 			console.log('won!');
 			newWindow.open(staticNegotiation, '_self');
+			negotiation();
 		}else if(state == 3){
 			console.log('lost!');
 		}
@@ -55,13 +88,13 @@ function checkBattle(state) { // state 0 = during battle, state 1 = after battle
 }
 
 function checkDrama() {
+	console.log('checkDrama');
 	if(newWindow.document.readyState == 'complete' &&
 		newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
 		!$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
 
-		dramaID = unescape($(newWindow.$('.button')[0]).attr('href').split('&')[1].split('=')[1]).split('&')[0].split('=')[1];
-		console.log('dramaID:', dramaID);
-		if(battleInfo[battleID] == dramaID){
+		console.log('battleInfo ID:', battleInfo[battleID]);
+		if(battleInfo[battleID] == $(newWindow.$('.button')[0]).attr('href').split('&')[0].split('=')[1]){
 			newWindow.open(staticBattle1 + battleID + staticBattle2, '_self');
 			checkBattle(0);
 		}
