@@ -4,7 +4,8 @@ var staticNormalBattle = staticURLBase + "_c=battle&action=exec_battle";
 var staticEventBattle = staticURLBase + "_c=parts_pvp_event&action=exec_battle";
 var staticEventStone = staticURLBase + "_c=parts_pvp_event&action=battle_list";
 var staticEventEntry = staticURLBase + "_c=parts_pvp_event&action=entry";
-var staticGhostIndex = staticMagaID - 64 - 1; // this formula only works for the first half of the ghosts
+//var staticGhostIndex = staticMagaID - 64 - 1; // this formula only works for the first half of the ghosts
+var staticGhostIndex = 0;
 
 var newWindow;
 var curItem;
@@ -12,14 +13,14 @@ var curItem;
 // ---------------------- Editable Starts ----------------------
 // -------------------------------------------------------------
 var reloadTime = 10 // when the game is slow, increase this number as needed. Time in sec = reloadTime / 2.
-var maxDS = 40; // defence spirit cap of the target
-var targetType = 1; // 0 for stock maga, 1 for event maga
+var maxDS = 45; // defence spirit cap of the target
+var targetType = 0; // 0 for stock maga, 1 for event maga
 
 // For event (only matters if targetType == 1)
 var eventID = 66 // event ID
 
 // For static maga (only matters if targetType == 0)
-var staticMagaID = 68; // 66 = kaguya, 68 = hare
+var staticMagaID = 1438; // 66 = kaguya, 68 = hare
 var staticMagaTargetState = 0; // 0 if for auto complete maga set, 1 for repeating on the same stone
 var staticMagaTarget = 5; // 1~6, indicate the target stone colour (only matters if staticMagaTargetState == 1)
 // -------------------------------------------------------------
@@ -76,7 +77,7 @@ function checkFight(battleWindow, state){
 function crawl(counter){
     if(newWindow.document.readyState == 'complete' && !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading') && newWindow.$('.defense-kiai').length > 0){
         var urlSplit = newWindow.location.href.split("&");
-        if(urlSplit.length >= 2 && urlSplit[1] == "action=battle_list"){
+        if(urlSplit.length >= 2 && (urlSplit[1] == "action=battle_list" || urlSplit[3] == "action=battle_list")){
             var playerList = newWindow.$('#opponents-list').find('li');
             var i = 0;
             for(i = 0; i < playerList.length; i++){
@@ -121,19 +122,19 @@ function openNewWindow(){
         var stoneList;
         if(targetType == 0){
             var claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('input')[3];
-            if(claim == undefined){
-                claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('button')[0];
-            }
-            if(!$(claim).hasClass('disabled')){
-                $(claim).click();
+            if(newWindow.$('.complete-reward')[staticGhostIndex] != undefined &&
+                !$(newWindow.$('.complete-reward')[staticGhostIndex].getElementsByTagName('button')).hasClass('disabled')){
+                $(newWindow.$('.complete-reward')[staticGhostIndex].getElementsByTagName('button')).click();
                 getMaga();
+            }else{
+                stoneList = newWindow.$('.parts-selector')[staticGhostIndex].getElementsByClassName('parts');   
             }
-            stoneList = newWindow.$('.parts-selector')[staticGhostIndex].getElementsByClassName('parts');
         }else{
             stoneList = newWindow.$('.parts');
         }
         var index = 0;
-        while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != null){
+        //console.log(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') == null);
+        while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != ""){
             index++;
         }
         curItem = index + 1;
