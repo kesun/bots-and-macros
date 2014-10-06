@@ -88,6 +88,7 @@ function checkBattle(state) { // state 0 = during battle, state 1 = after battle
             negotiation();
         }else if(state == 3){
             console.log('lost!');
+            setTimeout(init, 500);
         }
         
     }else{
