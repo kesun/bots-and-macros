@@ -226,7 +226,7 @@ function init() {
     if(newWindow.document.readyState == 'complete' &&
         !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
         newWindow.open(adventureURL, "_self");
-        climb();
+        setTimeout(climb, 1000);
     }else{
         setTimeout(init, 1000);
     }
