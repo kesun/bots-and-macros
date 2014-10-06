@@ -51,7 +51,6 @@ function negotiation() {
             case 101432:
             case 101433:
             case 101434:
-                console.log('going to cancel!')
                 var cancelURL = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_negotiation&action=resign&evid=" + eventID;
                 newWindow.open(cancelURL, '_self'); /////////////////////////////////////////////////////
                 break;
@@ -68,14 +67,12 @@ function checkBattle(state) { // state 0 = during battle, state 1 = after battle
         newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
         !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
         if(state == 0) {
-            console.log('state 0');
             setTimeout(function(){
                 newWindow.$('.layer').trigger('click'); ////////////////////////////////////////////////////
                 setTimeout(function(){checkBattle(1);}, 1000);
             }, 1000);
             
         }else if(state == 1) {
-            console.log('state 1');
             if(newWindow.$('.results').hasClass('ui-page-active')){
                 if(newWindow.$('#extraquest-event-won-page').hasClass('ui-page-active')){
                     setTimeout(function(){checkBattle(2);}, 1000);
@@ -105,7 +102,6 @@ function checkDrama() {
         newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
         !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
 
-        console.log('battleInfo ID:', battleInfo[battleID]);
         if(battleInfo[battleID] == $(newWindow.$('.button')[0]).attr('href').split('&')[0].split('=')[1]){
             newWindow.open(staticBattle1 + battleID + staticBattle2, '_self');
             checkBattle(0);
@@ -117,18 +113,15 @@ function checkDrama() {
 }
 
 function wipeTeam(teamWindow, state, members){ // state 0 = init loading; state 1 = wiping; state 2 = close
-    console.log('wipeTeam(state):', state);
     if(teamWindow.document.readyState == 'complete' &&
         teamWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
         !$(teamWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
 
         if(state == 0){
-            console.log('clicking offence:', $(teamWindow.$('.offense')[0]).parent());
             $(teamWindow.$('.offense')[0]).click();
             wipeTeam(teamWindow, 1, members);
         }else if(state == 1){
             if(teamWindow.$('.reset-monster').length > 0){
-                console.log('clicking reset:', $(teamWindow.$('.reset-monster')[0]));
                 $(teamWindow.$('.reset-monster')[1]).click();
                 wipeTeam(teamWindow, 2, members);
             }else{
@@ -149,7 +142,6 @@ function wipeTeam(teamWindow, state, members){ // state 0 = init loading; state 
 }
 
 function addMember(memberWindow, members, index){
-    console.log('addMember(index):', index);
     if(memberWindow.document.readyState == 'complete' &&
         memberWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
         !$(memberWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
@@ -177,7 +169,6 @@ function addMember(memberWindow, members, index){
 }
 
 function updateTeam(members, state, index){ // state 0 = wipe team, state 1 = add members, state 2 = done
-    console.log('updateTeam(state):', state);
     if(members == ""){
         setTimeout(init, 500);
     }else{
