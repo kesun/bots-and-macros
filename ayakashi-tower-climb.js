@@ -49,11 +49,12 @@ function negotiation() {
             case 101432:
             case 101433:
             case 101434:
+                console.log('going to cancel!')
                 var cancelURL = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_negotiation&action=resign&evid=" + eventID;
                 newWindow.open(cancelURL, '_self'); /////////////////////////////////////////////////////
                 break;
         }
-        setTimeout(climb, 2000);
+        setTimeout(init, 2000);
     }else{
         setTimeout(negotiation, 1000);
     }
