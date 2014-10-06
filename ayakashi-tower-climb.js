@@ -12,7 +12,6 @@ var teamInfo = {
     111434: [],
     111435: [],
     111436: [],
-    111437: [],
     1014232: [17306, 10415, 10495, 10416, 10493]
 };
 // 613064 = dora
@@ -45,10 +44,10 @@ function negotiation() {
         newWindow.$('#negotiation-page').length > 0) {
         console.log(battleID);
         switch(battleID) {
-            case 101431:
-            case 101432:
-            case 101433:
-            case 101434:
+            case "101431":
+            case "101432":
+            case "101433":
+            case "101434":
                 console.log('going to cancel!')
                 var cancelURL = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_negotiation&action=resign&evid=" + eventID;
                 newWindow.open(cancelURL, '_self'); /////////////////////////////////////////////////////
@@ -224,8 +223,13 @@ function climb(){
 }
 
 function init() {
-    newWindow.open(adventureURL, "_self");
-    climb();
+    if(newWindow.document.readyState == 'complete' &&
+        !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
+        newWindow.open(adventureURL, "_self");
+        climb();
+    }else{
+        setTimeout(init, 1000);
+    }
 }
 
 newWindow = window.open("", "_blank", "width=10, height=10");
