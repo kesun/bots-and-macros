@@ -42,12 +42,12 @@ function negotiation() {
         newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
         !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading') &&
         newWindow.$('#negotiation-page').length > 0) {
-        console.log(battleID);
-        switch(battleID) {
-            case "101431":
-            case "101432":
-            case "101433":
-            case "101434":
+        console.log(parseInt(battleID));
+        switch(parseInt(battleID)) {
+            case 101431:
+            case 101432:
+            case 101433:
+            case 101434:
                 console.log('going to cancel!')
                 var cancelURL = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_negotiation&action=resign&evid=" + eventID;
                 newWindow.open(cancelURL, '_self'); /////////////////////////////////////////////////////
