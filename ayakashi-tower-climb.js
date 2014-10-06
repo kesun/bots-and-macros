@@ -49,7 +49,8 @@ function negotiation() {
             case 101432:
             case 101433:
             case 101434:
-                newWindow.open($(newWindow.$('.button')[1]).attr('href'), '_self'); /////////////////////////////////////////////////////
+                var cancelURL = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_negotiation&action=resign&evid=" + eventID;
+                newWindow.open(cancelURL, '_self'); /////////////////////////////////////////////////////
                 break;
         }
         setTimeout(climb, 2000);
