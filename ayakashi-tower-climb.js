@@ -14,8 +14,7 @@ var teamInfo = {
     111433: [],
     111434: [],
     111435: [],
-    111436: [],
-    1014232: [17306, 10415, 10495, 10416, 10493]
+    //111436: []
 };
 // 613064 = dora
 var battleInfo = {
@@ -213,6 +212,10 @@ function climb(){
             battleID = newWindow.location.href.split('&')[0].split('=')[1];
             console.log('ghost encountered: ', battleID);
             updateTeam(teamInfo[battleID], 0, 0);
+        }else if(newWindow.$('#negotiation-page').length > 0){
+            var cancelURL = "http://zc2.ayakashi.zynga.com/app.php?_c=extra_quest_event_negotiation&action=resign&evid=" + eventID;
+            newWindow.open(cancelURL, '_self');
+            setTimeout(climb, 2000);
         }
     }else{
         setTimeout(climb, 1000);
