@@ -4,11 +4,11 @@ var eventID = 67;
 var teamInfo = {
     101431: [10472, 10415, 10495, 10416, 10493],
     101432: [10492, 10472, 10181, 17306, 10495],
-    //101433: [16453, 17579, 17198, 10046, 10495],
-    //101434: [10181, 10472, 11290, 17225, 17306],
+    101433: [16453, 17579, 17198, 10046, 10495],
+    101434: [10181, 10472, 11290, 17225, 17306],
     //101432: [],
-    101433: [],
-    101434: [],
+    //101433: [],
+    //101434: [],
     101435: [],
     111431: [],
     111433: [],
@@ -67,11 +67,14 @@ function checkBattle(state) { // state 0 = during battle, state 1 = after battle
         newWindow.document.getElementsByTagName('body')[0].innerHTML != "" &&
         !$(newWindow.document.getElementsByTagName('html')).hasClass('ui-loading')) {
         if(state == 0) {
-            setTimeout(function(){
-                newWindow.$('.layer').trigger('click'); ////////////////////////////////////////////////////
-                setTimeout(function(){checkBattle(1);}, 1000);
-            }, 1000);
-            
+            if($('#battle-page').hasClass('ui-page-active')){
+                setTimeout(function(){
+                    newWindow.$('.layer').trigger('click'); ////////////////////////////////////////////////////
+                    setTimeout(function(){checkBattle(1);}, 1000);
+                }, 1000); 
+            }else{
+                setTimeout(function(){checkBattle(0);}, 1000);
+            }
         }else if(state == 1) {
             if(newWindow.$('.results').hasClass('ui-page-active')){
                 if(newWindow.$('#extraquest-event-won-page').hasClass('ui-page-active')){
