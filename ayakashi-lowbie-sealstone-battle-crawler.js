@@ -2,10 +2,10 @@
 // -------------------------------------------------------------
 var reloadTime = 14 // when the game is slow, increase this number as needed. Time in sec = reloadTime / 2.
 var maxDS = 30; // defence spirit cap of the target
-var targetType = 0; // 0 for stock maga, 1 for event maga
+var targetType = 1; // 0 for stock maga, 1 for event maga
 
 // For event (only matters if targetType == 1)
-var eventID = 67 // event ID
+var eventID = 68 // event ID
 
 // For static maga (only matters if targetType == 0)
 var staticMagaID = 1438; // 66 = kaguya, 68 = hare
@@ -121,7 +121,6 @@ function openNewWindow(state, stoneList){
     if(newWindow.document.readyState == 'complete' && newWindow.document.getElementsByTagName('body')[0].innerHTML != "" && newWindow.$('.parts').length > 0){
         if (state == 0){
             if(targetType == 0){
-                console.log("staticGhostIndex", staticGhostIndex);
                 var claim = newWindow.$('.parts-list')[staticGhostIndex].getElementsByTagName('input')[3];
                 if(newWindow.$('.accept-reward').length > 0){
                     console.log(newWindow.$('.accept-reward'));
@@ -136,10 +135,9 @@ function openNewWindow(state, stoneList){
         }else{
             var index = 0;
             //console.log(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') == null);
-            while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != ""){
+            while(stoneList[index].getElementsByTagName('span')[0].getAttribute('style') != null){
                 index++;
             }
-            console.log('index', index);
             curItem = index + 1;
             var stoneURL;
             if(targetType == 0){
@@ -165,7 +163,7 @@ function init() {
         newWindow.open(staticMaga, "_self");
     }else{
         // var summaryURL = "http://zc2.ayakashi.zynga.com/app.php?_c=parts_pvp_event&action=parts_list&evid=" + eventID;
-        var summaryURL = staticEventEntry + "&evid=66";
+        var summaryURL = staticEventEntry + "&evid=" + eventID;
         newWindow.open(summaryURL, "_self");
     }
     openNewWindow(0, null);
