@@ -50,9 +50,10 @@ function checkFight(battleWindow, state){
                 setTimeout(function(){checkFight(battleWindow, 1)}, 500);
             }else if(battleWindow.$('#empty-energy-page').length > 0){
                 // deal with empty energy
-                var drink = battleWindow.$('.guts-recovery').attr("href");
-                battleWindow.open(drink, "_self");
-                setTimeout(function(){checkFight(battleWindow, 1)}, 1000);
+                //var drink = battleWindow.$('.guts-recovery').attr("href");
+                //battleWindow.open(drink, "_self");
+                //setTimeout(function(){checkFight(battleWindow, 1)}, 1000);
+                setTimeout(init, 60000000);
                 console.log('empty energy');
             }else if(battleWindow.$("#battle-page").length > 0){
                 // BATTLEZ!
