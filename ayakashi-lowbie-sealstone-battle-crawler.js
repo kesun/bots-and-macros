@@ -53,8 +53,10 @@ function checkFight(battleWindow, state){
                 //var drink = battleWindow.$('.guts-recovery').attr("href");
                 //battleWindow.open(drink, "_self");
                 //setTimeout(function(){checkFight(battleWindow, 1)}, 1000);
-                setTimeout(init, 60000000);
+                //setTimeout(init, 60000000);
                 console.log('empty energy');
+                battleWindow.close();
+                newWindow.close();
             }else if(battleWindow.$("#battle-page").length > 0){
                 // BATTLEZ!
                 console.log('WIN!');
