@@ -11,6 +11,7 @@ var eventID = 68 // event ID
 var staticMagaID = 1438; // 66 = kaguya, 68 = hare
 var staticMagaTargetState = 0; // 0 if for auto complete maga set, 1 for repeating on the same stone
 var staticMagaTarget = 5; // 1~6, indicate the target stone colour (only matters if staticMagaTargetState == 1)
+var emptyEnergy = 0; // 0 = quit, 1 = wait for 1k AS, 2 = water
 // -------------------------------------------------------------
 // ----------------------- Editable Ends -----------------------
 
@@ -50,13 +51,17 @@ function checkFight(battleWindow, state){
                 setTimeout(function(){checkFight(battleWindow, 1)}, 500);
             }else if(battleWindow.$('#empty-energy-page').length > 0){
                 // deal with empty energy
-                //var drink = battleWindow.$('.guts-recovery').attr("href");
-                //battleWindow.open(drink, "_self");
-                //setTimeout(function(){checkFight(battleWindow, 1)}, 1000);
-                //setTimeout(init, 60000000);
                 console.log('empty energy');
-                battleWindow.close();
-                newWindow.close();
+                if(emptyEnergy == 0){
+                    battleWindow.close();
+                    newWindow.close();
+                }else if(emptyEnergy == 1){
+                    setTimeout(init, 60000000);
+                }else if(emptyEnergy == 2){
+                    var drink = battleWindow.$('.guts-recovery').attr("href");
+                    battleWindow.open(drink, "_self");
+                    setTimeout(function(){checkFight(battleWindow, 1)}, 1000);
+                }
             }else if(battleWindow.$("#battle-page").length > 0){
                 // BATTLEZ!
                 console.log('WIN!');
