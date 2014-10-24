@@ -2,8 +2,11 @@ var current = 0;
 var max = 30;
 var continueClick = true;
 var curURL = document.URL;
-var newWindow = window.open(curURL, "_blank", "width=400, height=500");
+var newWindow = window.open(curURL, "_blank", "width=50, height=50");
 var heartBeat = 1000;
+var autoRefill = 1;
+var refillCount = 0;
+var maxRefill = 5;
 
 function init() {
     if(newWindow.document.readyState == 'complete' && newWindow.$('.ui-loading').length == 0){
@@ -19,6 +22,7 @@ function init() {
         } else if (newWindow.$("#npc-battle-confirm-page").hasClass("ui-page-active")) {
             $link = newWindow.$('a:first');
             $link[0].click();
+            heartBeat = 2000;
         } else if (newWindow.$("#won").hasClass("ui-page-active")) {
             $link = newWindow.$('a:first');
             $link[0].click();
@@ -43,13 +47,29 @@ function init() {
             newWindow.location.href = str;
         } else if (newWindow.$("#battle-page").hasClass("ui-page-active")) {
             newWindow.$("#node-7").trigger("click");
-        } else if (newWindow.$("#gacha-list-page").hasClass("ui-page-active")) {
+            heartBeat = 1000;
+        } else if (newWindow.$("#gacha-list-page").hasClass("ui-page-active") ||
+                newWindow.$("#event-promotion-page").hasClass("ui-page-active") ||
+                newWindow.$("#item-use-page").hasClass("ui-page-active")) {
             newWindow.open(curURL, "_self")
+            heartBeat = 3000;
         } else if (newWindow.$("#stage-page").hasClass("ui-page-active")) {
             //console.log('SOME WEIRD STATE');
+            heartBeat = 1000;
             newWindow.$("#do-adventure").trigger("click");
+        } else if (newWindow.$("#empty-energy-page").hasClass("ui-page-active")) {
+            if(autoRefill == 1 && refillCount < maxRefill){
+                newWindow.open("http://zc2.ayakashi.zynga.com/app.php?_c=item&action=use&item_id=4", "_self");
+                refillCount++;
+                heartBeat = 5000;
+            }else{
+                continueClick = false;
+                console.log("OUT OF ENERGY");
+            }
         }
-        setTimeout(init, heartBeat);
+        if(continueClick){
+            setTimeout(init, heartBeat);
+        }
     }else{
         setTimeout(init, heartBeat);
     }
