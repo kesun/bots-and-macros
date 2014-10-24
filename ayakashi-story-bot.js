@@ -12,7 +12,9 @@ function init() {
                 newWindow.$("#parts-complete-page").hasClass("ui-page-active") ||
                 newWindow.$("#level-up-page").hasClass("ui-page-active") ||
                 newWindow.$("#encounter-other-player-page").hasClass("ui-page-active") ||
-                newWindow.$("#parts-pvp-acquisition-page").hasClass("ui-page-active")) {
+                newWindow.$("#parts-pvp-acquisition-page").hasClass("ui-page-active") ||
+                newWindow.$("#treasure-acquisition-page").hasClass("ui-page-active") ||
+                newWindow.$("#adventure-timeout").hasClass("ui-page-active")) {
             newWindow.history.back();
         } else if (newWindow.$("#npc-battle-confirm-page").hasClass("ui-page-active")) {
             $link = newWindow.$('a:first');
@@ -41,6 +43,8 @@ function init() {
             newWindow.location.href = str;
         } else if (newWindow.$("#battle-page").hasClass("ui-page-active")) {
             newWindow.$("#node-7").trigger("click");
+        } else if (newWindow.$("#gacha-list-page").hasClass("ui-page-active")) {
+            newWindow.open(curURL, "_self")
         } else if (newWindow.$("#stage-page").hasClass("ui-page-active")) {
             //console.log('SOME WEIRD STATE');
             newWindow.$("#do-adventure").trigger("click");
