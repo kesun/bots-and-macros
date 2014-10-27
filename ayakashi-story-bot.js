@@ -4,7 +4,7 @@ var continueClick = true;
 var curURL = document.URL;
 var newWindow = window.open(curURL, "_blank", "width=50, height=50");
 var heartBeat = 1000;
-var autoRefill = 1;
+var autoRefill = 0;
 var refillCount = 0;
 var maxRefill = 5;
 
