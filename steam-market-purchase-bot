@@ -1,5 +1,5 @@
 // MODIFY THIS AREA ONLY
-var desiredPrice = 0.05;
+var desiredPrice = 0.35;
 var desiredPurchaseCount = 1;
 // END OF MODIFICATION AREA
 
@@ -10,14 +10,16 @@ var windowID = window.open(document.URL, "_blank", "width=500, height=300");
 checkReady();
 
 function refresh(){
-	console.log("refresh");
+	//console.log("refresh");
 	windowID.location.reload();
 	isRefreshing = true;
-	setTimeout(checkReady, 500);
+	if(purchased < desiredPurchaseCount){
+		setTimeout(checkReady, 500);
+	}
 }
 
 function checkReady(){
-	console.log("checkReady");
+	//console.log("checkReady");
 	var priceListLen = windowID.document.getElementsByClassName('market_listing_their_price').length;
 	if(windowID.document.getElementsByTagName('zzzzz').length == 0 && priceListLen > 1){
 		checkPrice();
@@ -27,7 +29,7 @@ function checkReady(){
 }
 
 function checkPrice(){
-	console.log("checkPrice");
+	//console.log("checkPrice");
     windowID.document.getElementsByTagName("html")[0].appendChild(windowID.document.createElement("zzzzz"));
 	var curPrice = parseFloat(windowID.document.getElementsByClassName('market_listing_their_price')[1].getElementsByClassName("market_listing_price_with_fee")[0].innerHTML.replace(/\s/g, '').substr(4));
 	console.log("curPrice: " + curPrice);
@@ -42,5 +44,16 @@ function checkPrice(){
 }
 
 function checkTransactionState(){
-  // TODO
+	if(windowID.document.getElementById('market_buynow_dialog_purchase').innerHTML != ""){ // purchase button visible
+		if(windowID.document.getElementById('market_buynow_dialog_error_text').innerHTML != ""){ // error message visible
+			refresh();
+		}else{ // no error message
+			setTimeout(checkTransactionState, 500);
+		}
+	}else{ // purchase button not visible
+		if(windowID.document.getElementById('market_buynow_dialog_purchasecomplete_message').getAttribute('style') == "overflow: visible;"){ // successful purchase
+			purchased++;
+		}
+		refresh();
+	}
 }
