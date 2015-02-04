@@ -36,8 +36,12 @@ function checkPrice(){
 	if(curPrice <= desiredPrice){
 		windowID.document.getElementsByClassName('item_market_action_button_contents')[0].click();
 		windowID.document.getElementById('market_buynow_dialog_accept_ssa').click();
-		windowID.document.getElementById('market_buynow_dialog_purchase').getElementsByTagName("span")[0].click();
-		checkTransactionState();
+		if(windowID.document.getElementById('market_buynow_dialog_purchase').getAttribute("style") != "display: none;"){
+			windowID.document.getElementById('market_buynow_dialog_purchase').getElementsByTagName("span")[0].click();
+			checkTransactionState();
+		}else{
+			console.log("Cannot purchase, check for your balance and whatnot pl0x, then run this script again.");
+		}
 	}else{
 		refresh();
 	}
