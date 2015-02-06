@@ -1,5 +1,5 @@
 // MODIFY THIS AREA ONLY
-var desiredPrice = 0.35;
+var desiredPrice = 0.14;
 var desiredPurchaseCount = 1;
 // END OF MODIFICATION AREA
 
@@ -21,7 +21,7 @@ function refresh(){
 function checkReady(){
 	//console.log("checkReady");
 	var priceListLen = windowID.document.getElementsByClassName('market_listing_their_price').length;
-	if(windowID.document.getElementsByTagName('zzzzz').length == 0 && priceListLen > 1){
+	if(windowID.document.getElementsByTagName('zzzzz').length == 0 && windowID.document.getElementsByClassName('market_listing_table_message').length == 0 && priceListLen > 1){
 		checkPrice();
 	}else{
 		setTimeout(checkReady, 100);
