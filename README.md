@@ -3,4 +3,6 @@ An on-going compilation of JS bots for web-based applications/games. Saves me an
 
 ## Target web apps/platforms
 * Ayakashi Ghost Guild (Chrome ext. version)
+  * Bots for various event, battle, and story modes.
 * Steam community market
+  * Bot for camping an item for a particular price and auto-purchase (bulk purchase option available)
