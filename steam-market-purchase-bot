@@ -34,14 +34,16 @@ function checkPrice(){
 	var curPrice = parseFloat(windowID.document.getElementsByClassName('market_listing_their_price')[1].getElementsByClassName("market_listing_price_with_fee")[0].innerHTML.replace(/\s/g, '').substr(4));
 	console.log("curPrice: " + curPrice);
 	if(curPrice <= desiredPrice){
-		windowID.document.getElementsByClassName('item_market_action_button_contents')[0].click();
-		windowID.document.getElementById('market_buynow_dialog_accept_ssa').click();
-		if(windowID.document.getElementById('market_buynow_dialog_purchase').getAttribute("style") != "display: none;"){
-			windowID.document.getElementById('market_buynow_dialog_purchase').getElementsByTagName("span")[0].click();
-			checkTransactionState();
-		}else{
-			console.log("Cannot purchase, check for your balance and whatnot pl0x, then run this script again.");
-		}
+		setTimeout(function(){
+			windowID.document.getElementsByClassName('item_market_action_button_contents')[0].click();
+			windowID.document.getElementById('market_buynow_dialog_accept_ssa').click();
+			if(windowID.document.getElementById('market_buynow_dialog_purchase').getAttribute("style") != "display: none;"){
+				windowID.document.getElementById('market_buynow_dialog_purchase').getElementsByTagName("span")[0].click();
+				checkTransactionState();
+			}else{
+				console.log("Cannot purchase, check for your balance and whatnot pl0x, then run this script again.");
+			}
+		}, 100);
 	}else{
 		refresh();
 	}
