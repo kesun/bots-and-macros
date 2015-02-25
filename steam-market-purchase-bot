@@ -26,6 +26,7 @@ function checkReady(){
 		checkPrice();
 	}else{
 		if(listingsLen == 0){
+			windowID.document.getElementsByTagName("html")[0].appendChild(windowID.document.createElement("zzzzz"));
 			setTimeout(refresh, 500);
 		}else{
 			setTimeout(checkReady, 100);
