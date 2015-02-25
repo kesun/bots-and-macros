@@ -21,10 +21,15 @@ function refresh(){
 function checkReady(){
 	//console.log("checkReady");
 	var priceListLen = windowID.document.getElementsByClassName('market_listing_their_price').length;
-	if(windowID.document.getElementsByTagName('zzzzz').length == 0 && windowID.document.getElementsByClassName('market_content_block').length > 0 && windowID.document.getElementsByClassName('market_listing_table_message').length == 0 && priceListLen > 1){
+	var listingsLen = windowID.document.getElementsByClassName('market_content_block').length;
+	if(windowID.document.getElementsByTagName('zzzzz').length == 0 && listingsLen > 0 && windowID.document.getElementsByClassName('market_listing_table_message').length == 0 && priceListLen > 1){
 		checkPrice();
 	}else{
-		setTimeout(checkReady, 100);
+		if(listingsLen == 0){
+			setTimeout(refresh, 500);
+		}else{
+			setTimeout(checkReady, 100);
+		}
 	}
 }
 
