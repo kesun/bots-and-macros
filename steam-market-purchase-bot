@@ -1,7 +1,9 @@
-// MODIFY THIS AREA ONLY
-var desiredPrice = 0.14;
+var desiredPrice = 0.03;
 var desiredPurchaseCount = 1;
-// END OF MODIFICATION AREA
+var gemName = "Kills";
+
+// DO NOT MODIFY ANYTHING BELOW IF YOU DON'T KNOW WHAT YOU ARE DOING
+// *****************************************************************
 
 var purchased = 0;
 
