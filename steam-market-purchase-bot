@@ -1,6 +1,6 @@
 var desiredPrice = 0.03;
 var desiredPurchaseCount = 1;
-var gemName = "Kills";
+var gemName = "Victories";
 // DO NOT MODIFY ANYTHING BELOW IF YOU DON'T KNOW WHAT YOU ARE DOING
 // *****************************************************************
 
@@ -44,8 +44,12 @@ function checkPrice(){
 	for(var key in listing){
 		listCounter++;
 		var curListing = listing[key];
-		var desc = curListing["descriptions"][1]["value"];
-		var gemPos = desc.indexOf(gemName);
+		var desc = curListing["descriptions"];
+		var gemPos = -1;
+		if(desc != undefined){
+			desc = desc[1]["value"];
+			gemPos = desc.indexOf(gemName);
+		}
 		if(gemName == "" || gemPos != -1){
 			foundPos[foundPos.length] = key;
 		}
@@ -67,24 +71,33 @@ function checkPrice(){
 		return priceA - priceB;
 	});
 	if(foundPos.length > 0){
+		var priceList = [];
 		for(var i = 0; i < foundPos.length && foundMatch == false; i++){
 			var curKey = foundPos[i];
 			for(var j = 0; j < listings.length && foundMatch == false; j++){
 				var pos = listings[j].href.indexOf(curKey);
+				//console.log("pos = " + j + " / " + pos);
 				if(pos != -1){
 					var curPrice = parseFloat(windowID.document.getElementsByClassName('market_listing_their_price')[j + 1].getElementsByClassName("market_listing_price_with_fee")[0].innerHTML.replace(/\s/g, '').substr(4));
-					console.log("Matched item price: " + curPrice);
+					priceList[priceList.length] = curPrice;
 					if(curPrice <= desiredPrice){
 						foundMatch = true;
 						setTimeout(function(){
-							windowID.document.getElementsByClassName('item_market_action_button_contents')[j].click();
-							windowID.document.getElementById('market_buynow_dialog_accept_ssa').click();
-							if(windowID.document.getElementById('market_buynow_dialog_purchase').getAttribute("style") != "display: none;"){
-								//windowID.document.getElementById('market_buynow_dialog_purchase').getElementsByTagName("span")[0].click();
-								checkTransactionState();
+							var btn = windowID.document.getElementsByClassName('item_market_action_button_contents')[j];
+							if(btn == undefined){
+								console.log(btn + "is undefined at " + j);
+								//checkReady();
 							}else{
-								console.log("Cannot purchase, check for your balance and whatnot pl0x, then run this script again.");
+								windowID.document.getElementsByClassName('item_market_action_button_contents')[j].click();
+								windowID.document.getElementById('market_buynow_dialog_accept_ssa').click();
+								if(windowID.document.getElementById('market_buynow_dialog_purchase').getAttribute("style") != "display: none;"){
+									//windowID.document.getElementById('market_buynow_dialog_purchase').getElementsByTagName("span")[0].click();
+									//checkTransactionState();
+								}else{
+									console.log("Cannot purchase, check for your balance and whatnot pl0x, then run this script again.");
+								}
 							}
+							
 						}, 100);
 					}else{
 						refresh();
@@ -92,6 +105,7 @@ function checkPrice(){
 				}
 			}
 		}
+		console.log("Prices of items that match gem criteria: " + priceList);
 	}else{
 		console.log("Current lowest overall price:", parseFloat(windowID.document.getElementsByClassName('market_listing_their_price')[1].getElementsByClassName("market_listing_price_with_fee")[0].innerHTML.replace(/\s/g, '').substr(4)));
 		refresh();
