@@ -46,7 +46,7 @@ function checkPrice(){
 		var curListing = listing[key];
 		var desc = curListing["descriptions"];
 		var gemPos = -1;
-		if(desc != undefined){
+		if(desc != undefined && desc[1] != undefined){
 			desc = desc[1]["value"];
 			gemPos = desc.indexOf(gemName);
 		}
