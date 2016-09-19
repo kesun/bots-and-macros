@@ -1,5 +1,7 @@
 from com.android.monkeyrunner import MonkeyRunner, MonkeyDevice, MonkeyImage
 from time import sleep
+from random import randint, uniform
+import sys
 
 device = MonkeyRunner.waitForConnection()
 
@@ -39,10 +41,10 @@ ELENA_POS_SWITCH = [(549, 1312), (88, 1292)]
 
 # COLOURS
 FIRE_WING = (-1, 222, 26, 3)
-LIGHT_WING = (-1, 134, 96, 15)
-WATER_WING = (-1, 6, 112, 128)
+LIGHT_WING = (-1, 119, 79, 3)
+WATER_WING = (-1, 6, 113, 122)
 
-ALLY_FIRE_WING = (-1, 218, 27, 3)
+ALLY_FIRE_WING = (-1, 170, 66, 43)
 ALLY_LIGHT_WING = (-1, 134, 96, 15)
 ALLY_WATER_WING = (-1, 6, 112, 128)
 
@@ -56,7 +58,7 @@ EMPTY_BAR = (-1, 140, 140, 132)
 
 # GENERIC STATICS
 BATTLE = (571, 1833)
-POST_BATTLE_BLANKS = (231, 1434)
+POST_BATTLE_BLANKS = (708, 1716)
 BACK = (155, 1844)
 
 # COMMON FUNCS
@@ -74,6 +76,12 @@ def allSkill():
 		sleep(0.5)
 
 # COMMON ACTIONS
+def clickies(n):
+	for i in range(0, n):
+		newBlank = (randint(POST_BATTLE_BLANKS[0] - 5, POST_BATTLE_BLANKS[0] + 5), randint(POST_BATTLE_BLANKS[1] - 5, POST_BATTLE_BLANKS[1] + 5))
+		touch(newBlank)
+		sleep(uniform(1.3, 1.6))
+
 def simpleBattle():
 	sleep(8)
 	touch(BATTLE)
@@ -83,9 +91,7 @@ def simpleBattle():
 	touch(BATTLE)
 	# battle finishes
 	sleep(12)
-	for i in range(0, 8):
-		touch(POST_BATTLE_BLANKS)
-		sleep(1.5)
+	clickies(8)
 
 # RAID ACTIONS
 def checkBossGone():
@@ -120,9 +126,7 @@ def postBattleActions():
 		sleep(1)
 		touch(BOSS_EVENT_TOP)
 	else:
-		for i in range(0, 4):
-			touch(POST_BATTLE_BLANKS)
-			sleep(1.5)
+		clickies(4)
 		touch(BOSS_EVENT_TOP)
 		sleep(4)
 
@@ -200,7 +204,7 @@ def searchBoss():
 	touch(BOSS_EVENT_QUEST)
 	sleep(6)
 	touch(BOSS_SEARCH_ASSISTANT)
-	sleep(2)
+	sleep(3)
 	touch(BOSS_GO)
 	sleep(1)
 	touch(BOSS_SPEND_AP)
@@ -240,6 +244,7 @@ def search():
 	print(FIRE_WING)
 	print(LIGHT_WING)
 	print(WATER_WING)
+	#return
 	setupOwnBoss()
 	if (wingPixel == FIRE_WING):
 		fireBossFight()
@@ -247,7 +252,10 @@ def search():
 		lightBossFight()
 	elif (wingPixel == WATER_WING):
 		waterBossFight()
+	else:
+		raise
 	print('left search')
+	return True
 
 def allyRequest():
 	sleep(1)
@@ -259,7 +267,11 @@ def allyRequest():
 
 	if (pixel == ACTIVE_REQUEST):
 		pixel = newimage.getRawPixel(250, 225)
-
+		print (pixel)
+		print (ALLY_FIRE_WING)
+		print (ALLY_LIGHT_WING)
+		print (ALLY_WATER_WING)
+		#return
 		touch(BOSS_FIRST_REQUEST)
 		if (checkBossGone()):
 			return
@@ -279,6 +291,8 @@ def allyRequest():
 			lightBossFight()
 		elif (pixel == ALLY_WATER_WING):
 			waterBossFight()
+		else:
+			raise
 
 	else:
 		touch(BACK) # exit ally request page
@@ -297,10 +311,14 @@ def start():
 	newimage = device.takeSnapshot()
 	bubblePixel = newimage.getRawPixel(71, 1308)
 	print(EXEC_LIMIT)
+
 	if (bubblePixel == HAS_ASSISTS):
 		allyRequest()
+
 	else:
 		setupPixel = newimage.getRawPixel(990, 1348)
+		print (setupPixel)
+		print (MY_UNFINISHED_BOSS)
 		if (setupPixel != MY_UNFINISHED_BOSS):
 			successfulSearch = search()
 			if (not successfulSearch):
