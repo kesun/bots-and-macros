@@ -78,9 +78,9 @@ def allSkill():
 # COMMON ACTIONS
 def clickies(n):
 	for i in range(0, n):
-		newBlank = (randint(POST_BATTLE_BLANKS[0] - 5, POST_BATTLE_BLANKS[0] + 5), randint(POST_BATTLE_BLANKS[1] - 5, POST_BATTLE_BLANKS[1] + 5))
+		newBlank = (randint(POST_BATTLE_BLANKS[0] - 10, POST_BATTLE_BLANKS[0] + 10), randint(POST_BATTLE_BLANKS[1] - 10, POST_BATTLE_BLANKS[1] + 10))
 		touch(newBlank)
-		sleep(uniform(1.3, 1.6))
+		sleep(uniform(1, 1.5))
 
 def simpleBattle():
 	sleep(8)
@@ -212,7 +212,7 @@ def searchBoss():
 	return True
 
 def bossFound():
-	sleep(5)
+	sleep(4)
 	touch(BOSS_LATER)
 	sleep(5)
 
@@ -241,6 +241,7 @@ def search():
 	sleep(2)
 	newimage = device.takeSnapshot()
 	wingPixel = newimage.getRawPixel(250, 1143)
+	print('check searched boss')
 	print(wingPixel)
 	print(FIRE_WING)
 	print(LIGHT_WING)
@@ -254,7 +255,7 @@ def search():
 	elif (wingPixel == WATER_WING):
 		waterBossFight()
 	else:
-		raise
+		return False
 
 	print('left search')
 	return True
@@ -269,6 +270,7 @@ def allyRequest():
 
 	if (pixel == ACTIVE_REQUEST):
 		pixel = newimage.getRawPixel(250, 225)
+		print('check ally boss')
 		print (pixel)
 		print (ALLY_FIRE_WING)
 		print (ALLY_LIGHT_WING)
@@ -319,6 +321,7 @@ def start():
 
 	else:
 		setupPixel = newimage.getRawPixel(990, 1348)
+		print ('check my unfinished boss')
 		print (setupPixel)
 		print (MY_UNFINISHED_BOSS)
 		if (setupPixel != MY_UNFINISHED_BOSS):
