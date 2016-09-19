@@ -46,7 +46,7 @@ WATER_WING = (-1, 6, 113, 122)
 
 ALLY_FIRE_WING = (-1, 170, 66, 43)
 ALLY_LIGHT_WING = (-1, 134, 96, 15)
-ALLY_WATER_WING = (-1, 6, 112, 128)
+ALLY_WATER_WING = (-1, 71, 93, 164)
 
 FAIL_OK_BUTTON = (-1, 193, 55, 49)
 BOSS_GONE_BUTTON = (-1, 170, 52, 45)
@@ -113,15 +113,16 @@ def checkBattleFail():
 	return pixel == FAIL_OK_BUTTON
 
 def postBattleActions():
+	sleep(1)
 	if (checkBattleFail()):
 		touch(BOSS_FAIL_OK)
+		sleep(4)
+		touch((942, 1100))
 		sleep(3)
-		touch(POST_BATTLE_BLANKS)
-		sleep(1)
 		touch(BOSS_CALL_ALLIES)
 		sleep(1)
 		touch(BOSS_FRIENDS)
-		sleep(3)
+		sleep(4)
 		touch(BOSS_CALLED_OK)
 		sleep(1)
 		touch(BOSS_EVENT_TOP)
@@ -254,6 +255,7 @@ def search():
 		waterBossFight()
 	else:
 		raise
+
 	print('left search')
 	return True
 
