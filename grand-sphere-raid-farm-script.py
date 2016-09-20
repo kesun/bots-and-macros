@@ -52,7 +52,8 @@ FAIL_OK_BUTTON = (-1, 193, 55, 49)
 BOSS_GONE_BUTTON = (-1, 170, 52, 45)
 HAS_ASSISTS = (-1, 196, 76, 53)
 ACTIVE_REQUEST = (-1, 119, 61, 55)
-MY_UNFINISHED_BOSS = (-1, 123, 78, 41)
+# MY_UNFINISHED_BOSS = (-1, 123, 78, 41)
+OWN_BOSS_DONE = (-1, 123, 78, 41)
 AP_GREEN = (-1, 81, 156, 25)
 EMPTY_BAR = (-1, 140, 140, 132)
 
@@ -311,10 +312,8 @@ def refresh():
 
 
 def start():
-	global EXEC_LIMIT
 	newimage = device.takeSnapshot()
 	bubblePixel = newimage.getRawPixel(71, 1308)
-	print(EXEC_LIMIT)
 
 	if (bubblePixel == HAS_ASSISTS):
 		allyRequest()
@@ -323,18 +322,20 @@ def start():
 		setupPixel = newimage.getRawPixel(990, 1348)
 		print ('check my unfinished boss')
 		print (setupPixel)
-		print (MY_UNFINISHED_BOSS)
-		if (setupPixel != MY_UNFINISHED_BOSS):
+		print (OWN_BOSS_DONE)
+		if (setupPixel == OWN_BOSS_DONE):
 			successfulSearch = search()
+			print ("search successful?")
+			print (successfulSearch)
 			if (not successfulSearch):
 				refresh()
 		else:
 			sleep(10)
 			refresh()
 
-	if (EXEC_LIMIT > 0):
-		EXEC_LIMIT = EXEC_LIMIT - 1
-		start()
-
 # magic starts here
-start()
+while (EXEC_LIMIT > 0):
+	global EXEC_LIMIT
+	print(EXEC_LIMIT)
+	EXEC_LIMIT = EXEC_LIMIT - 1
+	start()
