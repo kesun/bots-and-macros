@@ -52,8 +52,7 @@ FAIL_OK_BUTTON = (-1, 193, 55, 49)
 BOSS_GONE_BUTTON = (-1, 170, 52, 45)
 HAS_ASSISTS = (-1, 196, 76, 53)
 ACTIVE_REQUEST = (-1, 119, 61, 55)
-# MY_UNFINISHED_BOSS = (-1, 123, 78, 41)
-OWN_BOSS_DONE = (-1, 123, 78, 41)
+MY_UNFINISHED_BOSS = (-1, 159, 98, 193)
 AP_GREEN = (-1, 81, 156, 25)
 EMPTY_BAR = (-1, 140, 140, 132)
 
@@ -319,11 +318,11 @@ def start():
 		allyRequest()
 
 	else:
-		setupPixel = newimage.getRawPixel(990, 1348)
+		setupPixel = newimage.getRawPixel(699, 1366)
 		print ('check my unfinished boss')
 		print (setupPixel)
-		print (OWN_BOSS_DONE)
-		if (setupPixel == OWN_BOSS_DONE):
+		print (MY_UNFINISHED_BOSS)
+		if (setupPixel != MY_UNFINISHED_BOSS):
 			successfulSearch = search()
 			print ("search successful?")
 			print (successfulSearch)
