@@ -45,7 +45,7 @@ LIGHT_WING = (-1, 119, 79, 3)
 WATER_WING = (-1, 6, 113, 122)
 
 ALLY_FIRE_WING = (-1, 170, 66, 43)
-ALLY_LIGHT_WING = (-1, 134, 96, 15)
+ALLY_LIGHT_WING = (-1, 132, 93, 12)
 ALLY_WATER_WING = (-1, 71, 93, 164)
 
 FAIL_OK_BUTTON = (-1, 193, 55, 49)
@@ -118,7 +118,7 @@ def postBattleActions():
 		touch(BOSS_FAIL_OK)
 		sleep(4)
 		touch((942, 1100))
-		sleep(3)
+		sleep(4)
 		touch(BOSS_CALL_ALLIES)
 		sleep(1)
 		touch(BOSS_FRIENDS)
@@ -238,7 +238,7 @@ def search():
 	simpleBattle()
 	bossFound()
 
-	sleep(2)
+	sleep(3)
 	newimage = device.takeSnapshot()
 	wingPixel = newimage.getRawPixel(250, 1143)
 	print('check searched boss')
@@ -311,6 +311,7 @@ def refresh():
 
 
 def start():
+	sleep(3)
 	newimage = device.takeSnapshot()
 	bubblePixel = newimage.getRawPixel(71, 1308)
 
@@ -323,6 +324,7 @@ def start():
 		print (setupPixel)
 		print (MY_UNFINISHED_BOSS)
 		if (setupPixel != MY_UNFINISHED_BOSS):
+			print ('search for new boss')
 			successfulSearch = search()
 			print ("search successful?")
 			print (successfulSearch)
