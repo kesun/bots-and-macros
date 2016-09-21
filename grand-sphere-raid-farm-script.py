@@ -35,6 +35,9 @@ BOSS_FIRST_REQUEST = (526, 285)
 BOSS_FLED = (555, 1083)
 
 EVENT_SHOP = (520, 1839)
+RESTORE_BP = (922, 1648)
+USE_BP_POTION = (751, 1290)
+USE_BP_POTION_OK = (533, 1183)
 
 # SITUATIONALS
 ELENA_POS_SWITCH = [(549, 1312), (88, 1292)]
@@ -43,10 +46,12 @@ ELENA_POS_SWITCH = [(549, 1312), (88, 1292)]
 FIRE_WING = (-1, 220, 26, 3)
 LIGHT_WING = (-1, 119, 79, 3)
 WATER_WING = (-1, 6, 113, 122)
+UBER_WING = (-1, 245, 150, 7)
 
 ALLY_FIRE_WING = (-1, 170, 66, 43)
 ALLY_LIGHT_WING = (-1, 132, 93, 12)
 ALLY_WATER_WING = (-1, 71, 93, 164)
+ALLY_UBER_WING = (-1, 102, 54, 19)
 
 FAIL_OK_BUTTON = (-1, 193, 55, 49)
 BOSS_GONE_BUTTON = (-1, 170, 52, 45)
@@ -56,9 +61,10 @@ MY_UNFINISHED_BOSS = (-1, 159, 98, 193)
 CAN_SEARCH = (-1, 114, 38, 32)
 AP_GREEN = (-1, 81, 156, 25)
 EMPTY_BAR = (-1, 140, 140, 132)
+HAS_BP = (-1, 35, 66, 74)
 
 # GENERIC STATICS
-BATTLE = (571, 1833)
+BATTLE = (571, 1910)
 POST_BATTLE_BLANKS = (708, 1716)
 BACK = (155, 1844)
 
@@ -68,6 +74,12 @@ def touch(coord):
 
 def drag(coords):
 	device.drag(coords[0], coords[1], 0.2)
+
+def isColourSimilar(pixel, ref):
+	r = pixel[1] < ref[1] + 5 and pixel[1] > ref[1] - 5
+	g = pixel[2] < ref[2] + 5 and pixel[2] > ref[2] - 5
+	b = pixel[3] < ref[3] + 5 and pixel[3] > ref[3] - 5
+	return r and g and b
 
 def allSkill():
 	y1 = 1314
@@ -111,11 +123,12 @@ def checkBattleFail():
 	newimage = device.takeSnapshot()
 	pixel = newimage.getRawPixel(669, 1108)
 
-	return pixel == FAIL_OK_BUTTON
+	return pixel == FAIL_OK_BUTTON or pixel == (-1, 219, 122, 107)
 
 def postBattleActions():
 	sleep(1)
 	if (checkBattleFail()):
+		print ('boss failed')
 		touch(BOSS_FAIL_OK)
 		sleep(4)
 		touch((942, 1100))
@@ -183,6 +196,23 @@ def lightBossFight():
 	touch(BATTLE)
 	sleep(8)
 
+def uberBossFight():
+	sleep(8)
+	drag(ELENA_POS_SWITCH)
+	sleep(1)
+	touch(BATTLE)
+	sleep(9)
+	touch(BATTLE)
+	sleep(9)
+	touch(BATTLE)
+	sleep(8)
+	touch(BATTLE)
+	sleep(8)
+	allSkill()
+	sleep(1)
+	touch(BATTLE)
+	sleep(15)
+
 def searchBoss():
 	sleep(1)
 	touch(BOSS_SEARCH)
@@ -214,6 +244,18 @@ def bossFound():
 def setupOwnBoss():
 	touch(BOSS_SETUP)
 	sleep(4)
+
+	newimage = device.takeSnapshot()
+	pixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
+	if (pixel != HAS_BP):
+		touch(RESTORE_BP)
+		sleep(1)
+		touch(USE_BP_POTION)
+		sleep(2)
+		touch(USE_BP_POTION_OK)
+		sleep(1)
+
+
 	touch(BOSS_ZERO_BP)
 	sleep(6)
 	touch(BOSS_FIGHT_ASSISTANT)
@@ -224,14 +266,18 @@ def fightBoss(wingPixel, isFromAlly=False):
 	print('check boss type')
 	print('my boss wing colour')
 	print(wingPixel)
-	if (wingPixel == (ALLY_FIRE_WING if isFromAlly else FIRE_WING)):
+	if (isColourSimilar(wingPixel, ALLY_FIRE_WING if isFromAlly else FIRE_WING)):
 		fireBossFight()
-	elif (wingPixel == (ALLY_LIGHT_WING if isFromAlly else LIGHT_WING)):
+	elif (isColourSimilar(wingPixel, ALLY_LIGHT_WING if isFromAlly else LIGHT_WING)):
 		lightBossFight()
-	elif (wingPixel == (ALLY_WATER_WING if isFromAlly else WATER_WING)):
+	elif (isColourSimilar(wingPixel, ALLY_WATER_WING if isFromAlly else WATER_WING)):
 		waterBossFight()
+	elif (isColourSimilar(wingPixel, ALLY_UBER_WING if isFromAlly else UBER_WING)):
+		uberBossFight()
 	else:
-		# raise
+		print ('new wing colour!')
+		print (wingPixel)
+		raise
 		return False
 
 	print('boss fight complete')
@@ -255,9 +301,12 @@ def search():
 	bossFound()
 
 	sleep(3)
-	wingPixel = getMyBossWingColour((250, 1143), device.takeSnapshot())
-	setupOwnBoss()
-	fightBoss(wingPixel)
+	newimage = device.takeSnapshot()
+	setupPixel = newimage.getRawPixel(699, 1366)
+	if (setupPixel != CAN_SEARCH):
+		wingPixel = getMyBossWingColour((250, 1143), newimage)
+		setupOwnBoss()
+		fightBoss(wingPixel)
 
 def allyRequest():
 	sleep(1)
@@ -273,6 +322,17 @@ def allyRequest():
 		if (checkBossGone()):
 			return
 		sleep(3)
+
+		newimage = device.takeSnapshot()
+		pixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
+		if (pixel != HAS_BP):
+			touch(RESTORE_BP)
+			sleep(1)
+			touch(USE_BP_POTION)
+			sleep(2)
+			touch(USE_BP_POTION_OK)
+			sleep(1)
+
 		touch(BOSS_ZERO_BP)
 		if (checkBossGone()):
 			return
@@ -294,15 +354,73 @@ def refresh():
 	touch(BACK)
 	sleep(5)
 
+def checkRequests():
+	sleep(1)
+	touch(BOSS_ALLY_REQUESTS)
+	sleep(4)
+
+	newimage = device.takeSnapshot()
+	x = 250
+	y = 200
+	yMax = 1600
+
+	while (y < 1600):
+		pixel = newimage.getRawPixel(x, y)
+		# if (pixel == ALLY_UBER_WING or pixel == ALLY_LIGHT_WING):
+		if (isColourSimilar(pixel, ALLY_UBER_WING) or isColourSimilar(pixel, ALLY_LIGHT_WING)):
+			print ('found ally light or uber boss')
+			touch((x, y))
+			if (checkBossGone()):
+				break
+			sleep(3)
+
+			newimage = device.takeSnapshot()
+			pixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
+			if (pixel != HAS_BP):
+				touch(RESTORE_BP)
+				sleep(1)
+				touch(USE_BP_POTION)
+				sleep(2)
+				touch(USE_BP_POTION_OK)
+				sleep(1)
+			
+			touch(BOSS_ZERO_BP)
+			if (checkBossGone()):
+				break
+			sleep(4)
+			touch(BOSS_FIGHT_ASSISTANT)
+			sleep(2)
+			touch(BOSS_START)
+			if (checkBossGone()):
+				break
+			fightBoss(pixel, True)
+			return True
+		y = y + 1
+
+	touch(BACK)
+	return False
 
 def start():
 	sleep(3)
 	newimage = device.takeSnapshot()
 	bubblePixel = newimage.getRawPixel(71, 1308)
-
+	'''
+	# ally req wing colour
+	print (newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1]))
+	return
+	while (y < yMax):
+		pixel = newimage.getRawPixel(x, y)
+		if (isColourSimilar(pixel, ALLY_UBER_WING)):
+			print (pixel)
+			print (x)
+			print (y)
+			device.drag((x, y), (x + 500, y), 2)
+			sleep(1)
+		y = y + 1
+	return
+	'''
 	if (bubblePixel == HAS_ASSISTS):
 		allyRequest()
-
 	else:
 		setupPixel = newimage.getRawPixel(699, 1366)
 		print ('check my unfinished boss')
@@ -324,17 +442,29 @@ def start():
 		if (setupPixel == CAN_SEARCH):
 			print ('search for new boss')
 			successfulSearch = search()
+			if (not successfulSearch):
+				checkOpenReq = checkRequests()
+				if (not checkOpenReq):
+					wingPixel = getMyBossWingColour((250, 1143), newimage)
+					setupOwnBoss()
+					fightBoss(wingPixel)
+
 		elif (setupPixel == MY_UNFINISHED_BOSS):
-			wingPixel = getMyBossWingColour((250, 1143), newimage)
-			setupOwnBoss()
-			fightBoss(wingPixel)
+			checkOpenReq = checkRequests()
+			if (not checkOpenReq):
+				wingPixel = getMyBossWingColour((250, 1143), newimage)
+				setupOwnBoss()
+				fightBoss(wingPixel)
 		# ======================================
 		else:
 			sleep(10)
 			refresh()
 
 # magic starts here
+# start()
+
 while (EXEC_LIMIT > 0):
 	print(EXEC_LIMIT)
 	EXEC_LIMIT = EXEC_LIMIT - 1
 	start()
+
