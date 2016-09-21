@@ -246,8 +246,8 @@ def setupOwnBoss():
 	sleep(4)
 
 	newimage = device.takeSnapshot()
-	pixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
-	if (pixel != HAS_BP):
+	bpPixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
+	if (bpPixel != HAS_BP):
 		touch(RESTORE_BP)
 		sleep(1)
 		touch(USE_BP_POTION)
@@ -324,8 +324,8 @@ def allyRequest():
 		sleep(3)
 
 		newimage = device.takeSnapshot()
-		pixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
-		if (pixel != HAS_BP):
+		bpPixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
+		if (bpPixel != HAS_BP):
 			touch(RESTORE_BP)
 			sleep(1)
 			touch(USE_BP_POTION)
@@ -375,15 +375,15 @@ def checkRequests():
 			sleep(3)
 
 			newimage = device.takeSnapshot()
-			pixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
-			if (pixel != HAS_BP):
+			bpPixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
+			if (bpPixel != HAS_BP):
 				touch(RESTORE_BP)
 				sleep(1)
 				touch(USE_BP_POTION)
 				sleep(2)
 				touch(USE_BP_POTION_OK)
 				sleep(1)
-			
+
 			touch(BOSS_ZERO_BP)
 			if (checkBossGone()):
 				break
@@ -467,4 +467,3 @@ while (EXEC_LIMIT > 0):
 	print(EXEC_LIMIT)
 	EXEC_LIMIT = EXEC_LIMIT - 1
 	start()
-
