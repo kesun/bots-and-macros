@@ -107,6 +107,17 @@ def simpleBattle():
 	clickies(8)
 
 # RAID ACTIONS
+def bpRefill():
+	newimage = device.takeSnapshot()
+	bpPixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
+	if (bpPixel != HAS_BP):
+		touch(RESTORE_BP)
+		sleep(1)
+		touch(USE_BP_POTION)
+		sleep(2)
+		touch(USE_BP_POTION_OK)
+		sleep(1)
+
 def checkBossGone():
 	newimage = device.takeSnapshot()
 	pixel = newimage.getRawPixel(515, 1117)
@@ -146,7 +157,7 @@ def postBattleActions():
 		sleep(4)
 
 def fireBossFight():
-	sleep(6)
+	sleep(4)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -163,7 +174,7 @@ def fireBossFight():
 	sleep(18)
 
 def waterBossFight():
-	sleep(6)
+	sleep(4)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -180,7 +191,7 @@ def waterBossFight():
 	sleep(8)
 
 def lightBossFight():
-	sleep(6)
+	sleep(4)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -197,7 +208,7 @@ def lightBossFight():
 	sleep(8)
 
 def uberBossFight():
-	sleep(6)
+	sleep(4)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -245,16 +256,7 @@ def setupOwnBoss():
 	touch(BOSS_SETUP)
 	sleep(4)
 
-	newimage = device.takeSnapshot()
-	bpPixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
-	if (bpPixel != HAS_BP):
-		touch(RESTORE_BP)
-		sleep(1)
-		touch(USE_BP_POTION)
-		sleep(2)
-		touch(USE_BP_POTION_OK)
-		sleep(1)
-
+	bpRefill()
 
 	touch(BOSS_ZERO_BP)
 	sleep(6)
@@ -326,15 +328,7 @@ def allyRequest():
 			return
 		sleep(3)
 
-		newimage = device.takeSnapshot()
-		bpPixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
-		if (bpPixel != HAS_BP):
-			touch(RESTORE_BP)
-			sleep(1)
-			touch(USE_BP_POTION)
-			sleep(2)
-			touch(USE_BP_POTION_OK)
-			sleep(1)
+		bpRefill()
 
 		touch(BOSS_ZERO_BP)
 		if (checkBossGone()):
@@ -378,15 +372,7 @@ def checkRequests():
 				break
 			sleep(3)
 
-			newimage = device.takeSnapshot()
-			bpPixel = newimage.getRawPixel(BOSS_ZERO_BP[0], BOSS_ZERO_BP[1])
-			if (bpPixel != HAS_BP):
-				touch(RESTORE_BP)
-				sleep(1)
-				touch(USE_BP_POTION)
-				sleep(2)
-				touch(USE_BP_POTION_OK)
-				sleep(1)
+			bpRefill()
 
 			touch(BOSS_ZERO_BP)
 			if (checkBossGone()):
