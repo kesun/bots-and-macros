@@ -19,3 +19,5 @@ This script will work out of the box if you can have a similar boss setup that i
 
 #### Special notes:
 The current scripts is tailored for the current event, has bp auto refill activated (since I have more than enough of them to burn), wait for regen and assist open/direct requests instead if the AP is less than 5 (not using gem to refill), using 0 bp poke for own boss, and using 0/1 bp on the first light/uber boss that's in the list, and attempts to discover my own boss only if there's no active direct assist requests from allies. So the purpose of the script is purely for farming materials.
+
+I also use increased time intervals between many of the actions to accommodate for the casually laggy data I have when I run it at home (where I don't have wifi - tethering ftw).
