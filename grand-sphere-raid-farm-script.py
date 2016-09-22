@@ -146,7 +146,7 @@ def postBattleActions():
 		sleep(4)
 
 def fireBossFight():
-	sleep(8)
+	sleep(6)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -163,7 +163,7 @@ def fireBossFight():
 	sleep(18)
 
 def waterBossFight():
-	sleep(8)
+	sleep(6)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -180,7 +180,7 @@ def waterBossFight():
 	sleep(8)
 
 def lightBossFight():
-	sleep(8)
+	sleep(6)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -197,7 +197,7 @@ def lightBossFight():
 	sleep(8)
 
 def uberBossFight():
-	sleep(8)
+	sleep(6)
 	drag(ELENA_POS_SWITCH)
 	sleep(1)
 	touch(BATTLE)
@@ -263,6 +263,9 @@ def setupOwnBoss():
 	touch(BOSS_START)
 
 def fightBoss(wingPixel, isFromAlly=False):
+	sleep(2)
+	if (checkBossGone()):
+		return False
 	print('check boss type')
 	print('my boss wing colour')
 	print(wingPixel)
@@ -355,6 +358,7 @@ def refresh():
 	sleep(5)
 
 def checkRequests():
+	bossFled = False
 	sleep(1)
 	touch(BOSS_ALLY_REQUESTS)
 	sleep(4)
@@ -392,12 +396,14 @@ def checkRequests():
 			sleep(2)
 			touch(BOSS_START)
 			if (checkBossGone()):
+				bossFled = True
 				break
 			fightBoss(pixel, True)
 			return True
 		y = y + 1
 
-	touch(BACK)
+	if (not bossFled):
+		touch(BACK)
 	return False
 
 def start():
@@ -445,6 +451,8 @@ def start():
 			if (not successfulSearch):
 				checkOpenReq = checkRequests()
 				if (not checkOpenReq):
+					sleep(3)
+					newimage = device.takeSnapshot()
 					wingPixel = getMyBossWingColour((250, 1143), newimage)
 					setupOwnBoss()
 					fightBoss(wingPixel)
