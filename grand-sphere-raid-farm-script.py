@@ -440,6 +440,7 @@ def start():
 			print ('search for new boss')
 			successfulSearch = search()
 			if (not successfulSearch):
+				sleep(3)
 				checkOpenReq = checkRequests()
 				if (not checkOpenReq):
 					sleep(3)
@@ -466,3 +467,4 @@ while (EXEC_LIMIT > 0):
 	print(EXEC_LIMIT)
 	EXEC_LIMIT = EXEC_LIMIT - 1
 	start()
+
